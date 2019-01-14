@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  DayViewController.swift
 //  ProductionControlTaskTracking
 //
 //  Created by Steven Robertson on 1/14/19.
@@ -8,8 +8,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class DayViewController: UIViewController {
 
+    @IBOutlet weak var dayTableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
