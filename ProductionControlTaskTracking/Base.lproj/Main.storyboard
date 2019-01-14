@@ -20,9 +20,22 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="93b-nf-3Pb">
                                 <rect key="frame" x="0.0" y="70" width="768" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W7t-On-7rV">
+                                        <rect key="frame" x="284" y="14.5" width="200" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="iEc-pv-9uK"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="9XV-8t-FYC"/>
+                                    <constraint firstItem="W7t-On-7rV" firstAttribute="centerY" secondItem="93b-nf-3Pb" secondAttribute="centerY" id="iRr-LB-mLY"/>
+                                    <constraint firstItem="W7t-On-7rV" firstAttribute="centerX" secondItem="93b-nf-3Pb" secondAttribute="centerX" id="rdU-nk-aL0"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2cE-aI-2eM">
@@ -64,6 +77,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="dateOfTasks" destination="cWh-lH-k0g" id="Q4J-Ev-Y4f"/>
+                                            <outlet property="nameOfPerson" destination="49L-S3-Nt4" id="uXf-OF-cTj"/>
                                             <segue destination="Cha-p6-f7w" kind="show" identifier="segueToTasks" id="dYn-sw-dMq"/>
                                         </connections>
                                     </tableViewCell>
@@ -86,7 +101,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="I9L-7c-MwL"/>
+                    <navigationItem key="navigationItem" id="I9L-7c-MwL">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="F5C-Fa-Tor"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="dayTableView" destination="2cE-aI-2eM" id="pRc-se-FGW"/>
                     </connections>
@@ -105,8 +122,21 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6SX-oR-zlL">
                                 <rect key="frame" x="0.0" y="70" width="768" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hf8-Wr-Jtg">
+                                        <rect key="frame" x="284" y="14.5" width="200" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="0Fj-Ah-cBt"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="Hf8-Wr-Jtg" firstAttribute="centerY" secondItem="6SX-oR-zlL" secondAttribute="centerY" id="NgU-RY-OPQ"/>
+                                    <constraint firstItem="Hf8-Wr-Jtg" firstAttribute="centerX" secondItem="6SX-oR-zlL" secondAttribute="centerX" id="acd-7T-KtW"/>
                                     <constraint firstAttribute="height" constant="50" id="eSa-Xb-0MO"/>
                                 </constraints>
                             </view>
@@ -123,6 +153,9 @@
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YfK-9Q-7Hs">
                                                     <rect key="frame" x="15" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="taskStartSwitch:" destination="XLM-E3-AB9" eventType="valueChanged" id="hKo-dp-CUn"/>
+                                                    </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:59" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wx3-lf-8oY">
                                                     <rect key="frame" x="82" y="11.5" width="54" height="20.5"/>
@@ -163,6 +196,10 @@
                                                 <constraint firstItem="wx3-lf-8oY" firstAttribute="centerY" secondItem="YfK-9Q-7Hs" secondAttribute="centerY" id="wkT-6k-PqN"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="startTimeLabel" destination="wx3-lf-8oY" id="hDt-Nb-yoX"/>
+                                            <outlet property="taskName" destination="9Wp-GS-5ER" id="Mbz-rA-JPS"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -180,6 +217,7 @@
                         <viewLayoutGuide key="safeArea" id="7PI-Li-ycw"/>
                     </view>
                     <connections>
+                        <outlet property="dateOfTasksLabel" destination="Hf8-Wr-Jtg" id="MTk-0C-K7v"/>
                         <outlet property="taskTableView" destination="OUJ-tC-OTM" id="Tdw-9L-U5P"/>
                     </connections>
                 </viewController>

@@ -7,9 +7,13 @@
 //
 
 import UIKit
+import CoreData
 
 class DayTableViewCell: UITableViewCell {
-
+    @IBOutlet weak var nameOfPerson: UILabel!
+    
+    @IBOutlet weak var dateOfTasks: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -21,4 +25,18 @@ class DayTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    func configureCell(day: Day) {
+        
+        if let day = day.dayDate {
+            dateOfTasks.text = timeFormat(date: day)
+        }
+        nameOfPerson.text = day.name
+    }
+    
+    func timeFormat(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "hh:mm"
+        return dateFormatter.string(from: date)
+    }
 }
