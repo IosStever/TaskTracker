@@ -15,6 +15,7 @@ class TaskTableViewCell: UITableViewCell {
     
     @IBOutlet weak var taskName: UILabel!
     
+    @IBOutlet weak var commentTextField: UITextField!
     func configureCell(task: Task) {
         
         if let time = task.time {

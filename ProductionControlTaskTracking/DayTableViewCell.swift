@@ -27,9 +27,9 @@ class DayTableViewCell: UITableViewCell {
 
     func configureCell(day: Day) {
         
-        if let day = day.dayDate {
-            dateOfTasks.text = timeFormat(date: day)
-        }
+  
+        dateOfTasks.text = day.dayDate
+        
         nameOfPerson.text = day.name
     }
     

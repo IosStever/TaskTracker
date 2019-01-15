@@ -9,58 +9,131 @@
 import UIKit
 import CoreData
 
-class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
+class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+//, NSFetchedResultsControllerDelegate {
     
-    
+    var dayArray = [Day]()
     
     @IBOutlet weak var dayTableView: UITableView!
     
-    var controller: NSFetchedResultsController<Day>!
+    //var controller: NSFetchedResultsController<Day>!
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dayTableView.delegate = self
         dayTableView.dataSource = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-        attemptFetch()
+        //attemptFetch()
+        loadDays()
         
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if let sections = controller.sections {
-            
-            let sectionInfo = sections[section]
-            return sectionInfo.numberOfObjects
-        }
-        
-        return 0
+//        if let sections = controller.sections {
+//
+//            let sectionInfo = sections[section]
+//            return sectionInfo.numberOfObjects
+//        }
+//
+        return dayArray.count
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        
-        if let sections = controller.sections {
-            return sections.count
-        }
-        
-        return 0
-    }
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//
+//        if let sections = controller.sections {
+//            return sections.count
+//        }
+//
+//        return 0
+//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        let day = dayArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "dateCell", for: indexPath) as! DayTableViewCell
-        configureCell(cell: cell, indexPath: indexPath as NSIndexPath)
+        //cell.configureCell(day: day)
+        cell.nameOfPerson.text = day.name
+        cell.dateOfTasks.text = day.dayDate
+//        if let day = dayArray[indexPath.row].dayDate {
+//            cell.dateOfTasks.text = timeFormat(date: day)
+//        }
+        //timeFormat(date: dayArray[indexPath.row].dayDate)
+        //configureCell(cell: cell, indexPath: indexPath as NSIndexPath)
         return cell
     }
     
-    func configureCell(cell: DayTableViewCell, indexPath: NSIndexPath) {
+//    func configureCell(cell: DayTableViewCell, indexPath: NSIndexPath) {
+//
+//        let day = controller.object(at: indexPath as IndexPath)
+//        cell.configureCell(day: day)
+//
+//    }
+    
+    
+    func saveItems() {
         
-        let day = controller.object(at: indexPath as IndexPath)
-        cell.configureCell(day: day)
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context \(error)")
+        }
         
+        dayTableView.reloadData()
+        print("dtv saved")
     }
     
+    func timeFormat(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "hh:mm"
+        return dateFormatter.string(from: date)
+    }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        performSegue(withIdentifier: "segueToTasks", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! TaskViewController
+        if let indexPath = dayTableView.indexPathForSelectedRow {
+            destinationVC.dayOfTask = dayArray[indexPath.row]
+            print("segue")
+        } else {
+            print("Did not work")
+        }
+    }
+    
+    /*
+     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     
+     performSegue(withIdentifier: "goToItems", sender: self)
+     }
+     
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     let destinationVC = segue.destination as! ToDoListViewController
+     if let indexPath = tableView.indexPathForSelectedRow {
+     destinationVC.selectedCategory = categoryArray[indexPath.row]
+     }
+     }
+ 
+ */
+    
+    
+    
+    func loadDays (with request: NSFetchRequest<Day> = Day.fetchRequest()) {
+        do {
+            dayArray = try context.fetch(request)
+        } catch {
+            print("Error loading categories \(error)")
+        }
+        
+        dayTableView.reloadData()
+        
+    }
+    /*
     func attemptFetch() {
         
         let fetchRequest: NSFetchRequest<Day> = Day.fetchRequest()
@@ -91,7 +164,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
         
     }
-    
+ 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         dayTableView.beginUpdates()
     }
@@ -131,7 +204,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             
         }
     }
-    
+    */
     @objc func addTapped() {
         
         var textField = UITextField()
@@ -139,12 +212,14 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let alert = UIAlertController(title: "Type your name below", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            let newDay = Day(context: context)
+            let newDay = Day(context: self.context)
             //newNote.passage = textField.text
             newDay.name = textField.text
             let today = Date()
             
-            newDay.dayDate = today
+            newDay.dayDate = self.timeFormat(date: today)
+            self.dayArray.append(newDay)
+
             self.saveItems()
             
             
@@ -160,16 +235,16 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
     }
     
-    func saveItems() {
-        
-        do {
-            try context.save()
-        } catch {
-            print("Error saving context \(error)")
-        }
-        
-        attemptFetch()
-    }
+//    func saveItems() {
+//        
+//        do {
+//            try context.save()
+//        } catch {
+//            print("Error saving context \(error)")
+//        }
+//        
+//        attemptFetch()
+//    }
     
 }
 

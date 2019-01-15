@@ -79,14 +79,9 @@
                                         <connections>
                                             <outlet property="dateOfTasks" destination="cWh-lH-k0g" id="Q4J-Ev-Y4f"/>
                                             <outlet property="nameOfPerson" destination="49L-S3-Nt4" id="uXf-OF-cTj"/>
-                                            <segue destination="Cha-p6-f7w" kind="show" identifier="segueToTasks" id="dYn-sw-dMq"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="Bh2-lB-FtD"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="zwp-e5-7la"/>
-                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -106,6 +101,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="dayTableView" destination="2cE-aI-2eM" id="pRc-se-FGW"/>
+                        <segue destination="Cha-p6-f7w" kind="show" identifier="segueToTasks" id="xwZ-dC-6go"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -126,7 +122,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hf8-Wr-Jtg">
                                         <rect key="frame" x="284" y="14.5" width="200" height="21"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="200" id="0Fj-Ah-cBt"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="0Fj-Ah-cBt"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -197,6 +193,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="commentTextField" destination="t3f-JE-Qbd" id="ctp-LL-zBX"/>
                                             <outlet property="startTimeLabel" destination="wx3-lf-8oY" id="hDt-Nb-yoX"/>
                                             <outlet property="taskName" destination="9Wp-GS-5ER" id="Mbz-rA-JPS"/>
                                         </connections>
