@@ -72,7 +72,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 //    }
     
     
-    func saveItems() {
+    func saveDays() {
         
         do {
             try context.save()
@@ -106,20 +106,9 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
     }
     
-    /*
-     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     
-     performSegue(withIdentifier: "goToItems", sender: self)
-     }
-     
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     let destinationVC = segue.destination as! ToDoListViewController
-     if let indexPath = tableView.indexPathForSelectedRow {
-     destinationVC.selectedCategory = categoryArray[indexPath.row]
-     }
-     }
- 
- */
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40
+    }
     
     
     
@@ -220,9 +209,8 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             newDay.dayDate = self.timeFormat(date: today)
             self.dayArray.append(newDay)
 
-            self.saveItems()
-            
-            
+            self.saveDays()
+                        
         }
         
         alert.addTextField { (alertTextField) in

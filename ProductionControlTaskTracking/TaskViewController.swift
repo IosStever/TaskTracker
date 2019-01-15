@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 
 class TaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-//, NSFetchedResultsControllerDelegate {
     
     
     @IBOutlet weak var taskTableView: UITableView!
@@ -21,62 +20,44 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var dayOfTask : Day? {
         didSet {
+            DispatchQueue.main.async {
+                self.taskTableView.reloadData()
+            }
             loadTasks()
         }
     }
     
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
-    // var controller: NSFetchedResultsController<Task>!
-    
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                //generateTestData()
-
-        // Do any additional setup after loading the view.
+        taskTableView.delegate = self
+        taskTableView.dataSource = self
+        loadTasks()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        if let sections = controller.sections {
-//
-//            let sectionInfo = sections[section]
-//            return sectionInfo.numberOfObjects
-//        }
-        print(taskArray.count)
-        
         return taskArray.count
     }
     
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//
-//        if let sections = controller.sections {
-//            return sections.count
-//        }
-//
-//        return 0
-//    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let task = taskArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
         cell.taskName?.text = task.taskName ?? ""
         cell.commentTextField?.text = task.comments ?? ""
-        cell.startTimeLabel?.text = timeFormat(date: Date())
+        if let time = task.time {
+            cell.startTimeLabel.text = timeFormat(date: time)
+        } else {
+        cell.startTimeLabel?.text = ""
+        }
+        cell.startOutletSwitch.setOn(task.startToggle, animated: false)
         
-//        if let taskName = task.taskName {
-//            cell.taskName?.text = taskName
-//        }
-//        if let comments = task.comments {
-//            cell.commentTextField?.text = comments
-//        }
-        
-        //cell.startTimeLabel?.text = timeFormat(date: Date())
-        //cell.configureCell(task: task)//, indexPath: indexPath as NSIndexPath)
-    return cell
+        return cell
     }
     
     func timeFormat(date: Date) -> String {
@@ -86,7 +67,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         return dateFormatter.string(from: date)
     }
     
-    func saveItems() {
+    func saveTasks() {
         
         do {
             try context.save()
@@ -99,23 +80,21 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func loadTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
         
-        let dayPredicate = NSPredicate(format: "dayForTask.dayDate MATCHES %@", dayOfTask!.dayDate!)// as CVarArg)
-        //print(dayPredicate)
-        //print(dayOfTask!.dayDate!)
-        //        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        let dayPredicate = NSPredicate(format: "dayForTask.dayDate MATCHES %@", dayOfTask!.dayDate!)
+
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [dayPredicate, additionalPredicate])
         } else {
             request.predicate = dayPredicate
-            print("Reached else")
-            print(request.predicate!)
+            //print("Reached else")
+            //print(request.predicate!)
         }
         
         do {
             taskArray = try context.fetch(request)
-            print("Reached context fetch")
-            print(taskArray.count)
-            print(taskArray)
+            //print("Reached context fetch")
+            //print(taskArray.count)
+            //print(taskArray)
         } catch {
             print("Error loading context \(error)")
         }
@@ -127,45 +106,18 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         taskTableView?.reloadData()
         //}
     }
-    /*
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
-        
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        
-        if let additionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-     
-        
-        do {
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Error loading context \(error)")
-        }
-        
-        tableView.reloadData()
-        
-    }
-    */
-//    func configureCell(cell: TaskTableViewCell, indexPath: NSIndexPath) {
-//
-//        let task = controller.object(at: indexPath as IndexPath)
-//        cell.configureCell(task: task)
-//
-//    }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func addTaskTapped(_ sender: UIBarButtonItem) {
+        let newTask = Task(context: self.context)
+        newTask.taskName = "Create deliveries"
+        newTask.startToggle   = false
+        newTask.comments = ""
+        newTask.dayForTask = self.dayOfTask
+        self.taskArray.append(newTask)
+        print("appended task")
+        self.saveTasks()
     }
-     */
-     
+    
      func generateTestData() {
      
      let item = Task(context: context)
@@ -177,13 +129,9 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
      let item3 = Task(context: context)
      item3.taskName = "Tesla Model S"
      
-     saveItems()
+     saveTasks()
      
      }
-     
  
-    
-    
-
 }
 

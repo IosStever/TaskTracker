@@ -108,7 +108,7 @@
             </objects>
             <point key="canvasLocation" x="902.34375" y="132.421875"/>
         </scene>
-        <!--Task View Controller-->
+        <!--Title-->
         <scene sceneID="g91-Ly-USl">
             <objects>
                 <viewController id="Cha-p6-f7w" customClass="TaskViewController" customModule="ProductionControlTaskTracking" customModuleProvider="target" sceneMemberID="viewController">
@@ -163,18 +163,18 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Wp-GS-5ER">
-                                                    <rect key="frame" x="146" y="11.5" width="270" height="21"/>
+                                                    <rect key="frame" x="146" y="11.5" width="350" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="270" id="k4g-uB-U7X"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="k4g-uB-U7X"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="t3f-JE-Qbd">
-                                                    <rect key="frame" x="426" y="7" width="270" height="30"/>
+                                                    <rect key="frame" x="506" y="7" width="250" height="30"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="270" id="le8-sX-sP0"/>
+                                                        <constraint firstAttribute="width" constant="250" id="le8-sX-sP0"/>
                                                     </constraints>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -194,6 +194,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="commentTextField" destination="t3f-JE-Qbd" id="ctp-LL-zBX"/>
+                                            <outlet property="startOutletSwitch" destination="YfK-9Q-7Hs" id="Th1-4Z-NiW"/>
                                             <outlet property="startTimeLabel" destination="wx3-lf-8oY" id="hDt-Nb-yoX"/>
                                             <outlet property="taskName" destination="9Wp-GS-5ER" id="Mbz-rA-JPS"/>
                                         </connections>
@@ -213,6 +214,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7PI-Li-ycw"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="zkO-r0-alY">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bmf-tZ-PzR">
+                            <connections>
+                                <action selector="addTaskTapped:" destination="Cha-p6-f7w" id="1Lp-ZG-DJK"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="dateOfTasksLabel" destination="Hf8-Wr-Jtg" id="MTk-0C-K7v"/>
                         <outlet property="taskTableView" destination="OUJ-tC-OTM" id="Tdw-9L-U5P"/>

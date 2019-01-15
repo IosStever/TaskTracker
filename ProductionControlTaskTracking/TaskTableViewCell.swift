@@ -15,6 +15,9 @@ class TaskTableViewCell: UITableViewCell {
     
     @IBOutlet weak var taskName: UILabel!
     
+    @IBOutlet weak var startOutletSwitch: UISwitch!
+    
+    
     @IBOutlet weak var commentTextField: UITextField!
     func configureCell(task: Task) {
         
