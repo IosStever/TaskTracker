@@ -100,7 +100,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         let destinationVC = segue.destination as! TaskViewController
         if let indexPath = dayTableView.indexPathForSelectedRow {
             destinationVC.dayOfTask = dayArray[indexPath.row]
-            print("segue")
         } else {
             print("Did not work")
         }

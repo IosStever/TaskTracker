@@ -48,15 +48,19 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let task = taskArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
-        cell.taskName?.text = task.taskName ?? ""
-        cell.commentTextField?.text = task.comments ?? ""
-        if let time = task.time {
-            cell.startTimeLabel.text = timeFormat(date: time)
-        } else {
-        cell.startTimeLabel?.text = ""
-        }
-        cell.startOutletSwitch.setOn(task.startToggle, animated: false)
-        
+        //cell.setTask(task: task)
+        cell.delegate = self
+        cell.taskItem = taskArray[indexPath.row]
+        //var delegate = TaskDataSourceDelegate?
+//        cell.taskName?.text = task.taskName ?? ""
+//        cell.commentTextField?.text = task.comments ?? ""
+//        if let time = task.time {
+//            cell.startTimeLabel.text = timeFormat(date: time)
+//        } else {
+//        cell.startTimeLabel.text = ""
+//        }
+//        cell.startOutletSwitch.setOn(task.startToggle, animated: false)
+        cell.configureCell(task: task)
         return cell
     }
     
@@ -68,15 +72,22 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func saveTasks() {
-        
+        DispatchQueue.main.async {
         do {
-            try context.save()
+            try self.context.save()
         } catch {
             print("Error saving context \(error)")
+        }
         }
         
         self.taskTableView.reloadData()
     }
+    
+    private func newSaveTasks() {
+    
+    }
+    
+    
     
     func loadTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
         
@@ -113,6 +124,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         newTask.startToggle   = false
         newTask.comments = ""
         newTask.dayForTask = self.dayOfTask
+        newTask.time = Date()
         self.taskArray.append(newTask)
         print("appended task")
         self.saveTasks()
@@ -135,3 +147,16 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
  
 }
 
+extension TaskViewController: MyTableViewCellDelegate {
+    func didTapStartAction(task: Task) {
+        task.time = Date()
+        print(task.time!)
+        task.startToggle = true
+        print("start switch")
+        saveTasks()
+    }
+}
+
+//protocol TaskDataSourceDelegate : class {
+//    func setTask (task: Task)
+//}
