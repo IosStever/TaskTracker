@@ -22,41 +22,15 @@ class TaskTableViewCell: UITableViewCell {
     @IBOutlet weak var taskName: UILabel!
     
     @IBOutlet weak var startOutletSwitch: UISwitch!
-//        {
-//    didSet {
-//    startOutletSwitch.addTarget(self, action: #selector(TaskTableViewCell.updateTime), for: .valueChanged)
-//    }
-//    }
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
-  
+
     
     func setTask(task: Task) -> Task {
         let task = task
         return task
     }
-   
-    //Error in initializing var taskItem = Task()
-    //Error in unexpectedly finding nil taskItem: Task!
+ 
     
     var taskItem: Task!
-    
-    @objc func updateTime(task: Task) {
-        
-         task.time = Date()
-        self.startTimeLabel.text = timeFormat(date: task.time!)
-        do {
-            try self.context.save()
-        } catch {
-            print("Error saving context \(error)")
-        }
-    }
-
-    let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
-    
-    //var taskItem = NSFetchRequest<Task>(entityName: "Task")
-    //print("assigned taskItem")
     
     weak var delegate: MyTableViewCellDelegate?
     
@@ -64,14 +38,19 @@ class TaskTableViewCell: UITableViewCell {
     @IBOutlet weak var commentTextField: UITextField!
     
     func configureCell(task: Task) {
-        if let time = task.time {
-        startTimeLabel?.text = timeFormat(date: time )
-        } else {
-             startTimeLabel?.text = ""
+        if task.startToggle {
+            if let time = task.startTime {
+                startTimeLabel?.text = timeFormat(date: time )
+            } else {
+                startTimeLabel?.text = ""
+            }
         }
+        if !task.startToggle {
+            startTimeLabel?.text = ""
+        }
+       
         taskName?.text = task.taskName
         startOutletSwitch?.setOn(task.startToggle, animated: false)
-        print(task.startToggle)
         commentTextField?.text = task.comments ?? ""
     }
 
@@ -84,29 +63,19 @@ class TaskTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
-    
+    //Could possibly use taskItem.setValue(commentTextField.text, forKey: "comments") when textField is done editing
+    //context.delete(itemArray[indexPath.row])
+    //itemArray.remove(at: indexPath.row)
     @IBAction func taskStartSwitch(_ sender: UISwitch) {
-        //let newTask = Task(context: self.context)
-//        guard let theTask = taskItem else {
-//            fatalError("task not set")
-//        }
         delegate?.didTapStartAction(task: taskItem)
     }
     
-
 }
 
 
-//extension TaskTableViewCell, TaskDataSourceDelegate {
-//    func setTask (task: Task) {
-//        taskItem = task
-//    }
-//}

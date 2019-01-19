@@ -136,11 +136,11 @@
                                     <constraint firstAttribute="height" constant="50" id="eSa-Xb-0MO"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OUJ-tC-OTM">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OUJ-tC-OTM">
                                 <rect key="frame" x="0.0" y="120" width="768" height="904"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="taskCell" id="XLM-E3-AB9" customClass="TaskTableViewCell" customModule="ProductionControlTaskTracking" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" showsReorderControl="YES" indentationWidth="10" reuseIdentifier="taskCell" id="XLM-E3-AB9" customClass="TaskTableViewCell" customModule="ProductionControlTaskTracking" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="768" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XLM-E3-AB9" id="SMh-CG-IYM">
@@ -156,7 +156,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:59" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wx3-lf-8oY">
                                                     <rect key="frame" x="82" y="11.5" width="54" height="20.5"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="54" id="M2k-Et-JnD"/>
+                                                        <constraint firstAttribute="width" constant="54" id="M2k-Et-JnD"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -165,7 +165,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Wp-GS-5ER">
                                                     <rect key="frame" x="146" y="11.5" width="350" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="350" id="k4g-uB-U7X"/>
+                                                        <constraint firstAttribute="width" constant="350" id="k4g-uB-U7X"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -214,13 +214,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7PI-Li-ycw"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="zkO-r0-alY">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bmf-tZ-PzR">
-                            <connections>
-                                <action selector="addTaskTapped:" destination="Cha-p6-f7w" id="1Lp-ZG-DJK"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Title" id="zkO-r0-alY"/>
                     <connections>
                         <outlet property="dateOfTasksLabel" destination="Hf8-Wr-Jtg" id="MTk-0C-K7v"/>
                         <outlet property="taskTableView" destination="OUJ-tC-OTM" id="Tdw-9L-U5P"/>

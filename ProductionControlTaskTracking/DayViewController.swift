@@ -10,13 +10,11 @@ import UIKit
 import CoreData
 
 class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-//, NSFetchedResultsControllerDelegate {
     
     var dayArray = [Day]()
     
     @IBOutlet weak var dayTableView: UITableView!
     
-    //var controller: NSFetchedResultsController<Day>!
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     
@@ -32,23 +30,11 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-//        if let sections = controller.sections {
-//
-//            let sectionInfo = sections[section]
-//            return sectionInfo.numberOfObjects
-//        }
-//
+
         return dayArray.count
     }
     
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//
-//        if let sections = controller.sections {
-//            return sections.count
-//        }
-//
-//        return 0
-//    }
+
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let day = dayArray[indexPath.row]
@@ -56,20 +42,9 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         //cell.configureCell(day: day)
         cell.nameOfPerson.text = day.name
         cell.dateOfTasks.text = day.dayDate
-//        if let day = dayArray[indexPath.row].dayDate {
-//            cell.dateOfTasks.text = timeFormat(date: day)
-//        }
-        //timeFormat(date: dayArray[indexPath.row].dayDate)
-        //configureCell(cell: cell, indexPath: indexPath as NSIndexPath)
+
         return cell
     }
-    
-//    func configureCell(cell: DayTableViewCell, indexPath: NSIndexPath) {
-//
-//        let day = controller.object(at: indexPath as IndexPath)
-//        cell.configureCell(day: day)
-//
-//    }
     
     
     func saveDays() {
@@ -87,7 +62,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func timeFormat(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
-        dateFormatter.dateFormat = "hh:mm"
+        dateFormatter.dateFormat = "MMM dd, yyyy hh:mm"
         return dateFormatter.string(from: date)
     }
     
@@ -121,78 +96,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         dayTableView.reloadData()
         
     }
-    /*
-    func attemptFetch() {
-        
-        let fetchRequest: NSFetchRequest<Day> = Day.fetchRequest()
-        let dateSort = NSSortDescriptor(key: "dayDate", ascending: false)
-        
-        
-        
-        fetchRequest.sortDescriptors = [dateSort]
-        
-        
-        
-        
-        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
-        
-        controller.delegate = self
-        
-        self.controller = controller
-        
-        do {
-            
-            try controller.performFetch()
-            
-        } catch {
-            
-            let error = error as NSError
-            print("\(error)")
-            
-        }
-        
-    }
- 
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        dayTableView.beginUpdates()
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        dayTableView.endUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
-        switch(type) {
-            
-        case.insert:
-            if let indexPath = newIndexPath {
-                dayTableView.insertRows(at: [indexPath], with: .fade)
-            }
-            break
-        case.delete:
-            if let indexPath = indexPath {
-                dayTableView.deleteRows(at: [indexPath], with: .fade)
-            }
-            break
-        case.update:
-            if let indexPath = indexPath {
-                let cell = dayTableView.cellForRow(at: indexPath) as! DayTableViewCell
-                configureCell(cell: cell, indexPath: indexPath as NSIndexPath)
-            }
-            break
-        case.move:
-            if let indexPath = indexPath {
-                dayTableView.deleteRows(at: [indexPath], with: .fade)
-            }
-            if let indexPath = newIndexPath {
-                dayTableView.insertRows(at: [indexPath], with: .fade)
-            }
-            break
-            
-        }
-    }
-    */
     @objc func addTapped() {
         
         var textField = UITextField()
@@ -201,7 +104,6 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             let newDay = Day(context: self.context)
-            //newNote.passage = textField.text
             newDay.name = textField.text
             let today = Date()
             
@@ -221,17 +123,13 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         present(alert, animated: true, completion: nil)
         
     }
-    
-//    func saveItems() {
-//        
-//        do {
-//            try context.save()
-//        } catch {
-//            print("Error saving context \(error)")
-//        }
-//        
-//        attemptFetch()
-//    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            context.delete(dayArray[indexPath.row])
+            dayArray.remove(at: indexPath.row)
+            saveDays()
+        }
+    }
     
 }
 
