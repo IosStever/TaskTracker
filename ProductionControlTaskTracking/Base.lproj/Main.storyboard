@@ -119,8 +119,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6SX-oR-zlL">
                                 <rect key="frame" x="0.0" y="70" width="768" height="50"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hf8-Wr-Jtg">
-                                        <rect key="frame" x="284" y="14.5" width="200" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hf8-Wr-Jtg">
+                                        <rect key="frame" x="284" y="25" width="200" height="0.0"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="0Fj-Ah-cBt"/>
                                         </constraints>
@@ -218,11 +218,44 @@
                     <connections>
                         <outlet property="dateOfTasksLabel" destination="Hf8-Wr-Jtg" id="MTk-0C-K7v"/>
                         <outlet property="taskTableView" destination="OUJ-tC-OTM" id="Tdw-9L-U5P"/>
+                        <segue destination="9OR-tM-7pC" kind="show" identifier="toSummarySegue" id="Mgq-mm-7vI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VvI-w5-y7r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1721.09375" y="132.421875"/>
+        </scene>
+        <!--Summary View Controller-->
+        <scene sceneID="ftu-Qx-Y9C">
+            <objects>
+                <viewController storyboardIdentifier="summaryVC" id="9OR-tM-7pC" customClass="SummaryViewController" customModule="ProductionControlTaskTracking" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="y0f-Dt-MKU">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ih8-6T-I6t">
+                                <rect key="frame" x="0.0" y="100" width="768" height="924"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Xfp-cf-qtr" firstAttribute="bottom" secondItem="ih8-6T-I6t" secondAttribute="bottom" id="2pf-N6-rtv"/>
+                            <constraint firstItem="ih8-6T-I6t" firstAttribute="top" secondItem="Xfp-cf-qtr" secondAttribute="top" constant="30" id="WbD-Hr-aDX"/>
+                            <constraint firstItem="Xfp-cf-qtr" firstAttribute="trailing" secondItem="ih8-6T-I6t" secondAttribute="trailing" id="j7S-3q-WbU"/>
+                            <constraint firstItem="ih8-6T-I6t" firstAttribute="leading" secondItem="Xfp-cf-qtr" secondAttribute="leading" id="wbR-wQ-ruz"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Xfp-cf-qtr"/>
+                    </view>
+                    <connections>
+                        <outlet property="summaryTextView" destination="ih8-6T-I6t" id="byC-jS-EmW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WUn-i2-Fq6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2430" y="132"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fxR-7C-9rC">

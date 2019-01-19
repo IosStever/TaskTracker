@@ -38,20 +38,21 @@ class TaskTableViewCell: UITableViewCell {
     @IBOutlet weak var commentTextField: UITextField!
     
     func configureCell(task: Task) {
-        if task.startToggle {
-            if let time = task.startTime {
-                startTimeLabel?.text = timeFormat(date: time )
-            } else {
-                startTimeLabel?.text = ""
-            }
-        }
-        if !task.startToggle {
-            startTimeLabel?.text = ""
-        }
+        startTimeLabel?.text = timeFormat(date: task.startTime ?? Date())
+//        //if task.startToggle {
+//            if let time = task.startTime {
+//                startTimeLabel?.text = timeFormat(date: time )
+//            } else {
+//                startTimeLabel?.text = timeFormat(date: Date())
+//            }
+//        }
+//        if !task.startToggle {
+//            startTimeLabel?.text = ""
+//        }
        
         taskName?.text = task.taskName
         startOutletSwitch?.setOn(task.startToggle, animated: false)
-        commentTextField?.text = task.comments ?? ""
+        commentTextField.isHidden = true//?.text = task.comments ?? ""
     }
 
     func timeFormat(date: Date) -> String {

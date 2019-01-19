@@ -16,6 +16,7 @@
 		DB9C4E0721ECEDB100E11A15 /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4E0621ECEDB100E11A15 /* TaskViewController.swift */; };
 		DB9C4E0921ECEED800E11A15 /* DayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4E0821ECEED800E11A15 /* DayTableViewCell.swift */; };
 		DB9C4E0B21ECEEEB00E11A15 /* TaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4E0A21ECEEEB00E11A15 /* TaskTableViewCell.swift */; };
+		DB9C4E6021F3B1B100E11A15 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4E5F21F3B1B100E11A15 /* SummaryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		DB9C4E0621ECEDB100E11A15 /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		DB9C4E0821ECEED800E11A15 /* DayTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTableViewCell.swift; sourceTree = "<group>"; };
 		DB9C4E0A21ECEEEB00E11A15 /* TaskTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTableViewCell.swift; sourceTree = "<group>"; };
+		DB9C4E5F21F3B1B100E11A15 /* SummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 				DB9C4E0621ECEDB100E11A15 /* TaskViewController.swift */,
 				DB9C4E0821ECEED800E11A15 /* DayTableViewCell.swift */,
 				DB9C4E0A21ECEEEB00E11A15 /* TaskTableViewCell.swift */,
+				DB9C4E5F21F3B1B100E11A15 /* SummaryViewController.swift */,
 			);
 			path = ProductionControlTaskTracking;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 				DB9C4E0B21ECEEEB00E11A15 /* TaskTableViewCell.swift in Sources */,
 				DB9C4E0921ECEED800E11A15 /* DayTableViewCell.swift in Sources */,
 				DB9C4DF221ECE7AA00E11A15 /* AppDelegate.swift in Sources */,
+				DB9C4E6021F3B1B100E11A15 /* SummaryViewController.swift in Sources */,
 				DB9C4DFA21ECE7AA00E11A15 /* ProductionControlTaskTracking.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
