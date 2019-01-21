@@ -11,6 +11,7 @@ import CoreData
 
 class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var titleLabel: UILabel!
     var dayArray = [Day]()
     
     @IBOutlet weak var dayTableView: UITableView!
@@ -20,11 +21,13 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleLabel.text = "Production Control Task Tracker"
         dayTableView.delegate = self
         dayTableView.dataSource = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
         //attemptFetch()
         loadDays()
+        
         
     }
     

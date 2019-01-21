@@ -23,6 +23,7 @@ class TaskTableViewCell: UITableViewCell {
     
     @IBOutlet weak var startOutletSwitch: UISwitch!
 
+
     
     func setTask(task: Task) -> Task {
         let task = task
@@ -52,13 +53,15 @@ class TaskTableViewCell: UITableViewCell {
        
         taskName?.text = task.taskName
         startOutletSwitch?.setOn(task.startToggle, animated: false)
-        commentTextField.isHidden = true//?.text = task.comments ?? ""
+        commentTextField.text = task.comments ?? ""
+        //task.comments = commentTextField.text ?? ""
+        //commentTex tField.isHidden = true//?.text = task.comments ?? ""
     }
 
     func timeFormat(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
-        dateFormatter.dateFormat = "hh:mm"
+        dateFormatter.dateFormat = "hh:mm a"
         return dateFormatter.string(from: date)
     }
     
@@ -70,13 +73,16 @@ class TaskTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
-    //Could possibly use taskItem.setValue(commentTextField.text, forKey: "comments") when textField is done editing
-    //context.delete(itemArray[indexPath.row])
-    //itemArray.remove(at: indexPath.row)
+
     @IBAction func taskStartSwitch(_ sender: UISwitch) {
         delegate?.didTapStartAction(task: taskItem)
     }
     
+    @IBAction func commentInput(_ sender: Any) {
+        print("commentInputended")
+        taskItem.comments = commentTextField.text ?? ""
+        //TaskViewController.saveTasks()
+    }
 }
 
 

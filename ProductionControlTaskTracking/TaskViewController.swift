@@ -9,8 +9,10 @@
 import UIKit
 import CoreData
 
-class TaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    @IBOutlet weak var taskHeaderLabel: UILabel!
     
+    @IBOutlet weak var commentsHeaderLabel: UILabel!
     
     @IBOutlet weak var taskTableView: UITableView!
     
@@ -20,9 +22,6 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var dayOfTask : Day? {
         didSet {
-//            DispatchQueue.main.async {
-//                self.taskTableView.reloadData()
-//            }
             loadTasks()
         }
     }
@@ -34,15 +33,17 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let mode1 = UIBarButtonItem(title: "Mode 1", style: .plain, target: self, action: #selector(mode1Pressed))
-        let mode2 = UIBarButtonItem(title: "Mode 2", style: .plain, target: self, action: #selector(mode2Pressed))
-        let mode3 = UIBarButtonItem(title: "Mode 3", style: .plain, target: self, action: #selector(mode3Pressed))
-        let mode4 = UIBarButtonItem(title: "Mode 4", style: .plain, target: self, action: #selector(mode4Pressed))
+        let full = UIBarButtonItem(title: "Full", style: .plain, target: self, action: #selector(fullPressed))
+        let noWPS = UIBarButtonItem(title: "noWPS", style: .plain, target: self, action: #selector(noWPSPressed))
+        let print = UIBarButtonItem(title: "Print", style: .plain, target: self, action: #selector(printPressed))
+        let kni = UIBarButtonItem(title: "KNI", style: .plain, target: self, action: #selector(kniPressed))
+        let wild = UIBarButtonItem(title: "Wildcard", style: .plain, target: self, action: #selector(wildPressed))
+        let b2c = UIBarButtonItem(title: "B2C", style: .plain, target: self, action: #selector(b2cPressed))
         
         let summary = UIBarButtonItem(title: "Summary", style: .plain, target: self, action: #selector(summaryPressed))
-                let add = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addPressed))
+        let add = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addPressed))
         
-        navigationItem.rightBarButtonItems = [add, mode4, mode3, mode2, mode1, summary]
+        navigationItem.rightBarButtonItems = [add, b2c, wild, print, kni, noWPS, full, summary]
         navigationItem.title = ""
         
         taskTableView.delegate = self
@@ -52,156 +53,43 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
 
     
-    @objc func mode1Pressed(_ sender: Any) {
-        let date = Date()
-        let calendar = Calendar.current
-        let newTask1 = Task(context: self.context)
-        newTask1.taskName = "Pre-pick release requests"
-        newTask1.startToggle   = false
-        newTask1.comments = ""
-        newTask1.dayForTask = self.dayOfTask
-        let startTime1 = calendar.date(bySettingHour: 5,
-                                       minute: 45,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask1.startTime = startTime1
-        
-        let newTask2 = Task(context: self.context)
-        newTask2.taskName = "WPS and MOTX email"
-        newTask2.startToggle   = false
-        newTask2.comments = ""
-        newTask2.dayForTask = self.dayOfTask
-        let startTime2 = calendar.date(bySettingHour: 6,
-                                       minute: 15,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask2.startTime = startTime2
-        
-        let newTask3 = Task(context: self.context)
-        newTask3.taskName = "Process Replenator"
-        newTask3.startToggle   = false
-        newTask3.comments = ""
-        newTask3.dayForTask = self.dayOfTask
-        let startTime3 = calendar.date(bySettingHour: 6,
-                                       minute: 45,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask3.startTime = startTime3
-        
-        let newTask4 = Task(context: self.context)
-        newTask4.taskName = "Print B2C"
-        newTask4.startToggle   = false
-        newTask4.comments = ""
-        newTask4.dayForTask = self.dayOfTask
-        let startTime4 = calendar.date(bySettingHour: 7,
-                                       minute: 30,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask4.startTime = startTime4
-        
-        let newTask5 = Task(context: self.context)
-        newTask5.taskName = "Print Batch A"
-        newTask5.startToggle   = false
-        newTask5.comments = ""
-        newTask5.dayForTask = self.dayOfTask
-        let startTime5 = calendar.date(bySettingHour: 8,
-                                       minute: 0,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask5.startTime = startTime5
-        
-        let newTask6 = Task(context: self.context)
-        newTask6.taskName = "Send KNI spreadsheet"
-        newTask6.startToggle   = false
-        newTask6.comments = ""
-        newTask6.dayForTask = self.dayOfTask
-        let startTime6 = calendar.date(bySettingHour: 8,
-                                       minute: 1,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask6.startTime = startTime6
-        
-        let newTask7 = Task(context: self.context)
-        newTask7.taskName = "Wildcards"
-        newTask7.startToggle   = false
-        newTask7.comments = ""
-        newTask7.dayForTask = self.dayOfTask
-        let startTime7 = calendar.date(bySettingHour: 9,
-                                       minute: 59,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask7.startTime = startTime7
-        
-        let newTask8 = Task(context: self.context)
-        newTask8.taskName = "Print Batch B"
-        newTask8.startToggle   = false
-        newTask8.comments = ""
-        newTask8.dayForTask = self.dayOfTask
-        let startTime8 = calendar.date(bySettingHour: 10,
-                                       minute: 0,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask8.startTime = startTime8
-        
-        let newTask9 = Task(context: self.context)
-        newTask9.taskName = "Send turbo email"
-        newTask9.startToggle   = false
-        newTask9.comments = ""
-        newTask9.dayForTask = self.dayOfTask
-        let startTime9 = calendar.date(bySettingHour: 13,
-                                       minute: 30,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask9.startTime = startTime9
-        
-        let newTask10 = Task(context: self.context)
-        newTask10.taskName = "Transition batch"
-        newTask10.startToggle   = false
-        newTask10.comments = ""
-        newTask10.dayForTask = self.dayOfTask
-        let startTime10 = calendar.date(bySettingHour: 14,
-                                        minute: 0,
-                                        second: 0,
-                                        of: date,
-                                        direction: .backward)
-        newTask10.startTime = startTime10
-        
-        self.taskArray.append(newTask1)
-        self.taskArray.append(newTask2)
-        self.taskArray.append(newTask3)
-        self.taskArray.append(newTask4)
-        self.taskArray.append(newTask5)
-        self.taskArray.append(newTask6)
-        self.taskArray.append(newTask7)
-        self.taskArray.append(newTask8)
-        self.taskArray.append(newTask9)
-        self.taskArray.append(newTask10)
+    @objc func fullPressed(_ sender: Any) {
+        createTask(name: "Pre-pick release requests", hour: 5, minute: 45)
+        createTask(name: "Process Replenator", hour: 6, minute: 45)
+        createTask(name: "WPS and MOTX email", hour: 6, minute: 15)
+        createTask(name: "Print B2C", hour: 7, minute: 35)
+        createTask(name: "Send KNI Spreadsheet", hour: 8, minute: 0)
+        createTask(name: "Kick off Regular Pick release", hour: 6, minute: 55)
+        createTask(name: "Turbo email", hour: 13, minute: 30)
         self.saveTasks()
         self.loadTasks()
         
     }
     
+    override func viewWillDisappear(_ animated : Bool) {
+        super.viewWillDisappear(animated)
+        self.saveTasks()
+    }
     
-    @objc func mode2Pressed(_ sender: Any) {
+    @objc func noWPSPressed(_ sender: Any) {
+        createTask(name: "Print B2C", hour: 7, minute: 35)
+        createTask(name: "Send KNI Spreadsheet", hour: 8, minute: 0)
+        createTask(name: "Kick off Regular Pick release", hour: 7, minute: 30)
+        createTask(name: "Turbo email", hour: 13, minute: 30)
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    func createTask(name: String, hour: Int, minute: Int) {
         let newTask = Task(context: self.context)
-        newTask.taskName = "Send email to Steve"
+        newTask.taskName = name
         newTask.startToggle   = false
         newTask.comments = ""
         newTask.dayForTask = self.dayOfTask
-        
         let date = Date()
         let calendar = Calendar.current
-        let startTime = calendar.date(bySettingHour: 6,
-                                      minute: 30,
+        let startTime = calendar.date(bySettingHour: hour,
+                                      minute: minute,
                                       second: 0,
                                       of: date,
                                       direction: .backward)
@@ -209,61 +97,45 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         newTask.startTime = startTime
         self.taskArray.append(newTask)
-        let newTask1 = Task(context: self.context)
-        newTask1.taskName = "Start pick release"
-        newTask1.startToggle   = false
-        newTask1.comments = ""
-        newTask1.dayForTask = self.dayOfTask
-        let startTime2 = calendar.date(bySettingHour: 7,
-                                       minute: 0,
-                                       second: 0,
-                                       of: date,
-                                       direction: .backward)
-        newTask1.startTime = startTime2
-        self.taskArray.append(newTask1)
-        self.saveTasks()
-        self.loadTasks()
     }
     
-    
-    @objc func mode3Pressed(_ sender: Any) {
+    func createNowTask(name: String) {
         let newTask = Task(context: self.context)
-        newTask.taskName = "Send MOTX email"
-        newTask.startToggle   = false
+        newTask.taskName = name
+        newTask.startToggle   = true
         newTask.comments = ""
         newTask.dayForTask = self.dayOfTask
-        newTask.startTime = Date()
+        let startTime = Date()
+        newTask.startTime = startTime
         self.taskArray.append(newTask)
-        let newTask1 = Task(context: self.context)
-        newTask1.taskName = "Send KNI email"
-        newTask1.startToggle   = false
-        newTask1.comments = ""
-        newTask1.dayForTask = self.dayOfTask
-        newTask1.startTime = Date()
-        self.taskArray.append(newTask1)
+    }
+    
+    
+    @objc func printPressed(_ sender: Any) {
+        createNowTask(name: "Big print job: Add comment")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func kniPressed(_ sender: Any) {
+        createNowTask(name: "KNI processing")
         self.saveTasks()
         self.loadTasks()
     }
     
     
-    @objc func mode4Pressed(_ sender: Any) {
-        let newTask = Task(context: self.context)
-        newTask.taskName = "Send MOTX email"
-        newTask.startToggle   = false
-        newTask.comments = ""
-        newTask.dayForTask = self.dayOfTask
-        newTask.startTime = Date()
-        self.taskArray.append(newTask)
-        let newTask1 = Task(context: self.context)
-        newTask1.taskName = "Send KNI email"
-        newTask1.startToggle   = false
-        newTask1.comments = ""
-        newTask1.dayForTask = self.dayOfTask
-        newTask1.startTime = Date()
-        self.taskArray.append(newTask1)
+    @objc func b2cPressed(_ sender: Any) {
+        createNowTask(name: "B2C print")
         self.saveTasks()
         self.loadTasks()
     }
+    
+    @objc func wildPressed(_ sender: Any) {
+        createNowTask(name: "Wildcards: Add comment")
+        self.saveTasks()
+        self.loadTasks()
+    }
+
     
     @objc func addPressed(_ sender: Any) {
         var textField = UITextField()
@@ -314,8 +186,9 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             for task in taskArray {
                 let time = timeFormat(date: task.startTime ?? Date())
                 let theTask = task.taskName ?? ""
+                let comment = task.comments ?? ""
               
-                    oneTask = "\(time) \t \(theTask) \n"
+                    oneTask = "\(time) \t \(theTask) \t \(comment) \n"
                     summaryText += oneTask
                 
             }
@@ -335,16 +208,20 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let task = taskArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
+        //task.comments = cell.commentTextField.text ?? ""
         cell.delegate = self
         cell.taskItem = taskArray[indexPath.row]
         cell.configureCell(task: task)
         return cell
     }
     
+    
+
+    
     func timeFormat(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
-        dateFormatter.dateFormat = "hh:mm"
+        dateFormatter.dateFormat = "hh:mm a"
         return dateFormatter.string(from: date)
     }
     
@@ -415,11 +292,17 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            print("textFieldDidEndEditing")
+            //saveTasks()
+            //loadTasks()
+        }
     
 }
 
 extension TaskViewController: MyTableViewCellDelegate {
     func didTapStartAction(task: Task) {
+        
         task.startTime = Date()
         
         task.startToggle = !task.startToggle
