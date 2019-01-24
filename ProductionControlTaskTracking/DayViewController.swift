@@ -105,6 +105,8 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let alert = UIAlertController(title: "Type your name below", message: "", preferredStyle: .alert)
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+        
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             let newDay = Day(context: self.context)
             newDay.name = textField.text
@@ -122,7 +124,10 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             textField = alertTextField
         }
         
+        
         alert.addAction(action)
+        alert.addAction(cancelAction)
+        alert.preferredAction = action
         present(alert, animated: true, completion: nil)
         
     }

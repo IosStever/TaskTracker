@@ -33,17 +33,22 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let full = UIBarButtonItem(title: "Full", style: .plain, target: self, action: #selector(fullPressed))
-        let noWPS = UIBarButtonItem(title: "noWPS", style: .plain, target: self, action: #selector(noWPSPressed))
+        let wps = UIBarButtonItem(title: "WPS", style: .plain, target: self, action: #selector(wpsPressed))
+        let b2c = UIBarButtonItem(title: "B2C", style: .plain, target: self, action: #selector(b2cPressed))
         let print = UIBarButtonItem(title: "Print", style: .plain, target: self, action: #selector(printPressed))
         let kni = UIBarButtonItem(title: "KNI", style: .plain, target: self, action: #selector(kniPressed))
-        let wild = UIBarButtonItem(title: "Wildcard", style: .plain, target: self, action: #selector(wildPressed))
-        let b2c = UIBarButtonItem(title: "B2C", style: .plain, target: self, action: #selector(b2cPressed))
-        
+        let turbo = UIBarButtonItem(title: "Turbo", style: .plain, target: self, action: #selector(turboPressed))
+        let amazon = UIBarButtonItem(title: "AMZN", style: .plain, target: self, action: #selector(amazonPressed))
+        let exp = UIBarButtonItem(title: "Exp", style: .plain, target: self, action: #selector(expPressed))
+        let drop = UIBarButtonItem(title: "Drop", style: .plain, target: self, action: #selector(dropPressed))
+        let issue = UIBarButtonItem(title: "Issue", style: .plain, target: self, action: #selector(issuePressed))
+        let dummy = UIBarButtonItem(title: "Scroll", style: .plain, target: self, action: #selector(dummyPressed))
+
         let summary = UIBarButtonItem(title: "Summary", style: .plain, target: self, action: #selector(summaryPressed))
         let add = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addPressed))
         
-        navigationItem.rightBarButtonItems = [add, b2c, wild, print, kni, noWPS, full, summary]
+        navigationItem.rightBarButtonItems = [add, dummy, turbo, print, kni, issue, exp, drop, b2c, amazon, wps, summary]
+        
         navigationItem.title = ""
         
         taskTableView.delegate = self
@@ -53,14 +58,32 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
 
     
-    @objc func fullPressed(_ sender: Any) {
-        createTask(name: "Pre-pick release requests", hour: 5, minute: 45)
-        createTask(name: "Process Replenator", hour: 6, minute: 45)
-        createTask(name: "WPS and MOTX email", hour: 6, minute: 15)
-        createTask(name: "Print B2C", hour: 7, minute: 35)
-        createTask(name: "Send KNI Spreadsheet", hour: 8, minute: 0)
-        createTask(name: "Kick off Regular Pick release", hour: 6, minute: 55)
-        createTask(name: "Turbo email", hour: 13, minute: 30)
+    @objc func wpsPressed(_ sender: Any) {
+        createTask(name: "Estimated lines", hour: 5, minute: 45, comment: "Run both TOAD queries if not releasing all")
+        createTask(name: "Process header holds", hour: 5, minute: 46, comment: "Email Carrie re: BO threshold")
+        createTask(name: "Pre-pick release requests", hour: 5, minute: 48, comment: "Change B2C year")
+        createTask(name: "Estimated lines", hour: 5, minute: 50, comment: "After requests finish")
+
+        createTask(name: "Update WPS", hour: 5, minute: 51, comment: "Use picks, carryover reports and est. lines")
+        createTask(name: "Replenator", hour: 5, minute: 52, comment: " ")
+        createTask(name: "Secondaries", hour: 5, minute: 53, comment: "To Jacob, CC Justin, wavecontrol")
+        createTask(name: "Priorities on unprinted lines", hour: 5, minute: 54, comment: " ")
+
+        createTask(name: "WPS and MOTX email", hour: 5, minute: 59, comment: "")
+        createTask(name: "No prime", hour: 6, minute: 1, comment: "email to Justin")
+
+        createTask(name: "Process DNSB", hour: 6, minute: 3, comment: "Check request date, email to Carrie")
+        createTask(name: "Process Costing holds", hour: 6, minute: 6, comment: "Email to Paul Asnicar")
+        createTask(name: "Process Cubiscan holds", hour: 6, minute: 7, comment: "Email to Brandy, Gena")
+        createTask(name: "Process MIA", hour: 6, minute: 10, comment: " ")
+        createTask(name: "Process pick holds", hour: 6, minute: 11, comment: " ")
+        createTask(name: "Process replen issue", hour: 6, minute: 14, comment: "Check for <cpq, order holds")
+        createTask(name: "2 deliveries - one order", hour: 6, minute: 17, comment: "Check for pre-auth'd deliveries")
+        createTask(name: "Pre-auth", hour: 6, minute: 20, comment: "Process inbox during Reg. pre-auth")
+        createTask(name: "Check big lines or boxes", hour: 6, minute: 21, comment: "Avoid orders with 220 lines, 100 boxes Best way to SS")
+
+        createTask(name: "Start Reg. pick release", hour: 6, minute: 30, comment: "Main date only; exclude ESRs")
+
         self.saveTasks()
         self.loadTasks()
         
@@ -71,20 +94,17 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.saveTasks()
     }
     
-    @objc func noWPSPressed(_ sender: Any) {
-        createTask(name: "Print B2C", hour: 7, minute: 35)
-        createTask(name: "Send KNI Spreadsheet", hour: 8, minute: 0)
-        createTask(name: "Kick off Regular Pick release", hour: 7, minute: 30)
-        createTask(name: "Turbo email", hour: 13, minute: 30)
+    @objc func b2cPressed(_ sender: Any) {
+        createNowTask(name: "B2C", comments: "Run orders on hold with deliveries")
         self.saveTasks()
         self.loadTasks()
     }
     
-    func createTask(name: String, hour: Int, minute: Int) {
+    func createTask(name: String, hour: Int, minute: Int, comment: String) {
         let newTask = Task(context: self.context)
         newTask.taskName = name
         newTask.startToggle   = false
-        newTask.comments = ""
+        newTask.comments = comment
         newTask.dayForTask = self.dayOfTask
         let date = Date()
         let calendar = Calendar.current
@@ -99,11 +119,11 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.taskArray.append(newTask)
     }
     
-    func createNowTask(name: String) {
+    func createNowTask(name: String, comments: String) {
         let newTask = Task(context: self.context)
         newTask.taskName = name
         newTask.startToggle   = true
-        newTask.comments = ""
+        newTask.comments = comments
         newTask.dayForTask = self.dayOfTask
         let startTime = Date()
         newTask.startTime = startTime
@@ -112,38 +132,58 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     
     @objc func printPressed(_ sender: Any) {
-        createNowTask(name: "Big print job: Add comment")
+        createNowTask(name: "Print", comments: "Check LGBX singles")
         self.saveTasks()
         self.loadTasks()
     }
     
     @objc func kniPressed(_ sender: Any) {
-        createNowTask(name: "KNI processing")
+        createNowTask(name: "KNI prep or release", comments: " ")
         self.saveTasks()
         self.loadTasks()
     }
     
-    
-    @objc func b2cPressed(_ sender: Any) {
-        createNowTask(name: "B2C print")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func wildPressed(_ sender: Any) {
-        createNowTask(name: "Wildcards: Add comment")
+    @objc func amazonPressed(_ sender: Any) {
+        createNowTask(name: "Amazon prep or release", comments: "Check for DC prep orders")
         self.saveTasks()
         self.loadTasks()
     }
 
+    
+    @objc func turboPressed(_ sender: Any) {
+        createNowTask(name: "Turbo", comments: "Check for deliveries, pre-auth")
+        self.saveTasks()
+        self.loadTasks()
+    }
+
+    @objc func dropPressed(_ sender: Any) {
+        createNowTask(name: "Dropship", comments: "Check for deliveries, pre-auth")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func issuePressed(_ sender: Any) {
+        createNowTask(name: "Issue", comments: "Briefly describe")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func expPressed(_ sender: Any) {
+        createNowTask(name: "Expedite", comments: "Check for deliveries, pre-auth, move to folder")
+        self.saveTasks()
+        self.loadTasks()
+    }
     
     @objc func addPressed(_ sender: Any) {
         var textField = UITextField()
         
         let alert = UIAlertController(title: "New Task", message: "", preferredStyle: .alert)
         
+         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+        
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             
+       
             
             let newTask = Task(context: self.context)
             newTask.taskName = textField.text
@@ -162,6 +202,8 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         alert.addAction(action)
+        alert.addAction(cancelAction)
+        alert.preferredAction = action
         present(alert, animated: true, completion: nil)
         
         
@@ -177,6 +219,17 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     navigationController?.pushViewController(myVC, animated: true)
     }
     
+    @objc func dummyPressed(_ sender: Any) {
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+
+        self.saveTasks()
+        self.loadTasks()
+        
+    }
     func allTasksTogether() {
         saveTasks()
         loadTasks()
