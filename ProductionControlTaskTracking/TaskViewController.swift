@@ -48,15 +48,112 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         let add = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addPressed))
         
         navigationItem.rightBarButtonItems = [add, dummy, turbo, print, kni, issue, exp, drop, b2c, amazon, wps, summary]
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(self.keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
         
         navigationItem.title = ""
         
         taskTableView.delegate = self
         taskTableView.dataSource = self
-        //loadTasks()
     }
     
-
+    //MARK: Functions for Navigation Buttons
+    
+    @objc func addPressed(_ sender: Any) {
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "New Task", message: "", preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+        
+        let action = UIAlertAction(title: "Add", style: .default) { (action) in
+            
+            
+            
+            let newTask = Task(context: self.context)
+            newTask.taskName = textField.text
+            newTask.startToggle   = true
+            newTask.comments = ""
+            newTask.dayForTask = self.dayOfTask
+            newTask.startTime = Date()
+            self.taskArray.append(newTask)
+            self.saveTasks()
+            self.loadTasks()
+            
+        }
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "New task"
+            textField = alertTextField
+        }
+        
+        alert.addAction(action)
+        alert.addAction(cancelAction)
+        alert.preferredAction = action
+        present(alert, animated: true, completion: nil)
+        
+        
+    }
+    
+    @objc func dummyPressed(_ sender: Any) {
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
+        
+        self.saveTasks()
+        self.loadTasks()
+        
+    }
+    
+    @objc func turboPressed(_ sender: Any) {
+        createNowTask(name: "Turbo", comments: "Check for deliveries, pre-auth")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func printPressed(_ sender: Any) {
+        createNowTask(name: "Print", comments: "Check LGBX singles")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func kniPressed(_ sender: Any) {
+        createNowTask(name: "KNI prep or release", comments: " ")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func issuePressed(_ sender: Any) {
+        createNowTask(name: "Issue", comments: "Briefly describe")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func expPressed(_ sender: Any) {
+        createNowTask(name: "Expedite", comments: "Check for deliveries, pre-auth, move to folder")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func dropPressed(_ sender: Any) {
+        createNowTask(name: "Dropship", comments: "Check for deliveries, pre-auth")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func b2cPressed(_ sender: Any) {
+        createNowTask(name: "B2C", comments: "Run orders on hold with deliveries")
+        self.saveTasks()
+        self.loadTasks()
+    }
+    
+    @objc func amazonPressed(_ sender: Any) {
+        createNowTask(name: "Amazon prep or release", comments: "Check for DC prep orders")
+        self.saveTasks()
+        self.loadTasks()
+    }
     
     @objc func wpsPressed(_ sender: Any) {
         createTask(name: "Estimated lines", hour: 5, minute: 45, comment: "Run both TOAD queries if not releasing all")
@@ -94,11 +191,15 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.saveTasks()
     }
     
-    @objc func b2cPressed(_ sender: Any) {
-        createNowTask(name: "B2C", comments: "Run orders on hold with deliveries")
-        self.saveTasks()
-        self.loadTasks()
+    @objc func summaryPressed(_ sender: Any) {
+        allTasksTogether()
+        let myVC = storyboard?.instantiateViewController(withIdentifier: "summaryVC") as! SummaryViewController
+        myVC.summaryText = summaryText
+        
+        navigationController?.pushViewController(myVC, animated: true)
     }
+
+    //MARK: Supporting functions for navigation buttons
     
     func createTask(name: String, hour: Int, minute: Int, comment: String) {
         let newTask = Task(context: self.context)
@@ -131,105 +232,6 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     
-    @objc func printPressed(_ sender: Any) {
-        createNowTask(name: "Print", comments: "Check LGBX singles")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func kniPressed(_ sender: Any) {
-        createNowTask(name: "KNI prep or release", comments: " ")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func amazonPressed(_ sender: Any) {
-        createNowTask(name: "Amazon prep or release", comments: "Check for DC prep orders")
-        self.saveTasks()
-        self.loadTasks()
-    }
-
-    
-    @objc func turboPressed(_ sender: Any) {
-        createNowTask(name: "Turbo", comments: "Check for deliveries, pre-auth")
-        self.saveTasks()
-        self.loadTasks()
-    }
-
-    @objc func dropPressed(_ sender: Any) {
-        createNowTask(name: "Dropship", comments: "Check for deliveries, pre-auth")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func issuePressed(_ sender: Any) {
-        createNowTask(name: "Issue", comments: "Briefly describe")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func expPressed(_ sender: Any) {
-        createNowTask(name: "Expedite", comments: "Check for deliveries, pre-auth, move to folder")
-        self.saveTasks()
-        self.loadTasks()
-    }
-    
-    @objc func addPressed(_ sender: Any) {
-        var textField = UITextField()
-        
-        let alert = UIAlertController(title: "New Task", message: "", preferredStyle: .alert)
-        
-         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
-        
-        let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            
-       
-            
-            let newTask = Task(context: self.context)
-            newTask.taskName = textField.text
-            newTask.startToggle   = true
-            newTask.comments = ""
-            newTask.dayForTask = self.dayOfTask
-            newTask.startTime = Date()
-            self.taskArray.append(newTask)
-            self.saveTasks()
-            self.loadTasks()
-            
-        }
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "New task"
-            textField = alertTextField
-        }
-        
-        alert.addAction(action)
-        alert.addAction(cancelAction)
-        alert.preferredAction = action
-        present(alert, animated: true, completion: nil)
-        
-        
-    }
-    
-    @objc func summaryPressed(_ sender: Any) {
-    allTasksTogether()
-    let myVC = storyboard?.instantiateViewController(withIdentifier: "summaryVC") as! SummaryViewController
-    myVC.summaryText = summaryText
-//    if let thisVCtitletext = noteToEdit?.passage {
-//        myVC.titleText = thisVCtitletext
-//    }
-    navigationController?.pushViewController(myVC, animated: true)
-    }
-    
-    @objc func dummyPressed(_ sender: Any) {
-        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
-        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
-        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
-        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
-        createTask(name: "EOD", hour: 18, minute: 0, comment: "Delete when done")
-
-        self.saveTasks()
-        self.loadTasks()
-        
-    }
     func allTasksTogether() {
         saveTasks()
         loadTasks()
@@ -248,6 +250,14 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    func timeFormat(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "hh:mm a"
+        return dateFormatter.string(from: date)
+    }
+    
+    //MARK: Tableview functions
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -261,22 +271,21 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let task = taskArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
-        //task.comments = cell.commentTextField.text ?? ""
         cell.delegate = self
         cell.taskItem = taskArray[indexPath.row]
         cell.configureCell(task: task)
         return cell
     }
     
-    
-
-    
-    func timeFormat(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
-        dateFormatter.dateFormat = "hh:mm a"
-        return dateFormatter.string(from: date)
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            context.delete(taskArray[indexPath.row])
+            taskArray.remove(at: indexPath.row)
+            saveTasks()
+        }
     }
+    
+    //MARK: Save and load functions
     
     func saveTasks() {
         DispatchQueue.main.async {
@@ -289,9 +298,6 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.taskTableView.reloadData()
     }
-    
-
-    
     
     
     func loadTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
@@ -313,44 +319,33 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         } catch {
             print("Error loading context \(error)")
         }
-
         
         taskTableView?.reloadData()
     }
     
-
- 
-    func generateTestData() {
-        
-        let item = Task(context: context)
-        item.taskName = "MacBook Pro"
-        
-        let item2 = Task(context: context)
-        item2.taskName = "Bose Headphones"
-        
-        let item3 = Task(context: context)
-        item3.taskName = "Tesla Model S"
-        
-        saveTasks()
-        
-    }
-
+    //MARK: Keyboard functions
     
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            context.delete(taskArray[indexPath.row])
-            taskArray.remove(at: indexPath.row)
-            saveTasks()
+
+    @objc func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let frame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+                return
         }
+        let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
+        taskTableView.contentInset = contentInset
     }
     
-        func textFieldDidEndEditing(_ textField: UITextField) {
-            print("textFieldDidEndEditing")
-            //saveTasks()
-            //loadTasks()
-        }
+    @objc func keyboardWillHide(notification:NSNotification){
+        
+        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+        self.taskTableView.contentInset = contentInset
+    }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+
 }
 
 extension TaskViewController: MyTableViewCellDelegate {
@@ -363,4 +358,5 @@ extension TaskViewController: MyTableViewCellDelegate {
         loadTasks()
     }
 }
+
 
