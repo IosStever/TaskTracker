@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18C54" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Day" representedClassName="Day" syncable="YES" codeGenerationType="class">
+        <attribute name="dayDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="org" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startOfDay" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Task" inverseName="dayForTask" inverseEntity="Task" syncable="YES"/>
+    </entity>
+    <entity name="Routine" representedClassName="Routine" syncable="YES" codeGenerationType="class">
+        <attribute name="commentsForRoutine" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nameOfRoutine" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="routineTasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RoutineTask" inverseName="theRoutine" inverseEntity="RoutineTask" syncable="YES"/>
+    </entity>
+    <entity name="RoutineTask" representedClassName="RoutineTask" syncable="YES" codeGenerationType="class">
+        <attribute name="commentsForTask" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="interval" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="nameOfTask" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="theRoutine" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Routine" inverseName="routineTasks" inverseEntity="Routine" syncable="YES"/>
+    </entity>
+    <entity name="Task" representedClassName="Task" syncable="YES" codeGenerationType="class">
+        <attribute name="comments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startToggle" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="taskName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeFromStart" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="dayForTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Day" inverseName="tasks" inverseEntity="Day" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Day" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Routine" positionX="-259.92578125" positionY="193.83203125" width="128" height="88"/>
+        <element name="RoutineTask" positionX="40.44140625" positionY="400.84375" width="128" height="103"/>
+        <element name="Task" positionX="194.97265625" positionY="-16.37109375" width="128" height="133"/>
+    </elements>
+</model>
