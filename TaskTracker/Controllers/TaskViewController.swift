@@ -52,7 +52,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         taskTableView.delegate = self
         taskTableView.dataSource = self
-        startTimeLabel.text = ("Base: \(timeFormat(date: startTime!))")
+        startTimeLabel.text = timeFormat(date: startTime!)
         //taskTableView.rowHeight = UITableView.automaticDimension
         //taskTableView.estimatedRowHeight = 35
     }
@@ -148,7 +148,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func createTimedTask(name: String, comments: String, timeFromStart: Int) {
         baseTime = Date()
-        self.startTimeLabel.text = ("Base: \(timeFormat(date: baseTime!))")
+        self.startTimeLabel.text = timeFormat(date: baseTime!)
         let newTask = Task(context: self.context)
         newTask.taskName = name
         newTask.startToggle   = false

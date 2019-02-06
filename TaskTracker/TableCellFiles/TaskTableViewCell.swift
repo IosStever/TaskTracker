@@ -28,6 +28,7 @@ class TaskTableViewCell: UITableViewCell {
     
     weak var delegate: MyTableViewCellDelegate?
     
+    @IBOutlet weak var infoButton: UIButton!
     
     @IBOutlet weak var commentTextField: UITextField!
     
@@ -60,6 +61,9 @@ class TaskTableViewCell: UITableViewCell {
 
     }
 
+    @IBAction func infoButtonPushed(_ sender: UIButton) {
+    }
+    
     @IBAction func taskStartSwitch(_ sender: UISwitch) {
         delegate?.didTapStartAction(task: taskItem)
     }
