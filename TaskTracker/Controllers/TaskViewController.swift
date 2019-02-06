@@ -89,6 +89,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
                     newTask.startTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
                     
                 } else {
+                    newTask.timeFromStart=0
                     newTask.startTime = Date()
                 }
             }

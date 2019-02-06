@@ -40,7 +40,7 @@ class TaskTableViewCell: UITableViewCell {
             startTimeLabel?.textColor = .black
         }
        
-        taskName?.text = task.taskName
+        taskName?.text = ("+\(task.timeFromStart): \((task.taskName) ?? "No name")")
         startOutletSwitch?.setOn(task.startToggle, animated: false)
         commentTextField.text = task.comments ?? ""
     }

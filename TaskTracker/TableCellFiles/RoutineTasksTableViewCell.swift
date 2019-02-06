@@ -13,7 +13,6 @@ class RoutineTasksTableViewCell: UITableViewCell {
 
     @IBOutlet weak var nameOfTaskLabel: UILabel!
     
-    @IBOutlet weak var intervalLabel: UILabel!
     
     @IBOutlet weak var tasksCommentTextField: UITextField!
     
@@ -21,9 +20,8 @@ class RoutineTasksTableViewCell: UITableViewCell {
     var routineTaskItem: RoutineTask!
     
     func configureRoutineTaskCell(routineTask: RoutineTask) {
-        nameOfTaskLabel?.text = routineTask.nameOfTask
-        intervalLabel?.text = String(routineTask.interval)
-        tasksCommentTextField?.text = routineTask.commentsForTask ?? ""
+        nameOfTaskLabel?.text = ("+\(routineTask.interval):  \((routineTask.nameOfTask) ?? "No name")")
+        tasksCommentTextField?.text =  routineTask.commentsForTask ?? ""
     }
     
     override func awakeFromNib() {
