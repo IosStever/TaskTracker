@@ -11,7 +11,6 @@ import CoreData
 
 class TaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, loadRoutineTasksDelegate {
 
-    //, UITextFieldDelegate {
     @IBOutlet weak var taskHeaderLabel: UILabel!
     @IBOutlet weak var commentsHeaderLabel: UILabel!
     @IBOutlet weak var taskTableView: UITableView!
@@ -30,6 +29,8 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var tempTaskArray : [TempTask]? {
         didSet {
+           print("This is the temptask array")
+            print(tempTaskArray!)
            loadRoutineTasks(tempArray: tempTaskArray!)
         }
     }
@@ -87,7 +88,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if let timeInterval = Int16(numberEntered) {
                     newTask.timeFromStart = timeInterval
                     newTask.startTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
-                    
+
                 } else {
                     newTask.timeFromStart=0
                     newTask.startTime = Date()
@@ -98,7 +99,6 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             newTask.dayForTask = self.dayOfTask
             
             self.taskArray.append(newTask)
-            //print(self.taskArray)
             self.saveTasks()
             self.loadTasks()
             
@@ -137,14 +137,35 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.saveTasks()
     }
     
+//    override func viewDidAppear(_ animated: Bool) {
+//        loadTasks()
+//    }
 
     func loadRoutineTasks(tempArray: [TempTask]) {
         
         for tempTask in tempArray {
-           createTimedTask(name: tempTask.tempName, comments: tempTask.tempComments, timeFromStart: tempTask.tempInterval)
+           //createTimedTask(name: tempTask.tempName, comments: tempTask.tempComments, timeFromStart: tempTask.tempInterval)
+            baseTime = Date()
+            self.startTimeLabel.text = timeFormat(date: baseTime!)
+            let newTask = Task(context: self.context)
+            newTask.taskName = tempTask.tempName
+            newTask.startToggle   = false
+            newTask.dayForTask = self.dayOfTask
+            if let comments = tempTask.tempComments {
+               newTask.comments = comments
+            }
+            if let interval = tempTask.tempInterval {
+                newTask.timeFromStart = Int16(interval)
+            }
+            if let info = tempTask.tempInfo {
+                newTask.info = info
+            }
+            self.taskArray.append(newTask)
+
         }
+
         self.saveTasks()
-        self.loadTasks()
+        self.loadRoutineTasks()
     }
     
     func createTimedTask(name: String, comments: String, timeFromStart: Int) {
@@ -240,16 +261,26 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
                 print("Error saving context \(error)")
             }
         
-        taskTableView.reloadData()
+        //taskTableView.reloadData()
     }
     
-
+    func loadRoutineTasks (with request: NSFetchRequest<Task> = Task.fetchRequest()) {
+        let sort = NSSortDescriptor(key: "startTime", ascending: true)
+        request.sortDescriptors = [sort]
+        do {
+            taskArray = try context.fetch(request)
+        } catch {
+            print("Error loading categories \(error)")
+        }
+        
+        taskTableView.reloadData()
+        
+    }
 
     
     func loadTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
         
         let dayPredicate = NSPredicate(format: "dayForTask.dayDate MATCHES %@", dayOfTask!.dayDate!)
-        //print(self.dayOfTask!.dayDate!)
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [dayPredicate, additionalPredicate])
         } else {
@@ -261,13 +292,9 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         do {
             taskArray = try context.fetch(request)
-            //print("this is the task array")
-            //print(taskArray)
         } catch {
             print("Error loading context \(error)")
         }
-        print("this is the task array")
-        print(taskArray)
         taskTableView?.reloadData()
     }
     

@@ -24,9 +24,7 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     
     var routine : Routine? {
         didSet {
-            //routineName = routine?.nameOfRoutine
-            //print("reached didSet for routine tasks")
-            //print(routine!)
+
             loadRoutineTasks()
         }
     }
@@ -44,14 +42,21 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
         routineTasksTableView.delegate = self
         routineTasksTableView.dataSource = self
+        loadRoutineTasks()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        loadRoutineTasks()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         loadRoutineTasks()
         saveRoutineTasks()
         loadTempTasks()
+
         let destinationVC = segue.destination as! TaskViewController
             destinationVC.tempTaskArray = self.tempTasks
+    
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -72,9 +77,19 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
         if routineTasksArray.count > 0 {
             for task in routineTasksArray {
                 let newTempTask = TempTask()
-                newTempTask.tempName = task.nameOfTask ?? ""
+                if let taskName = task.nameOfTask {
+                    newTempTask.tempName = taskName
+                } else {
+                    newTempTask.tempName = "No name"
+                }
+                
                 newTempTask.tempInterval = Int(task.interval)
-                newTempTask.tempComments = task.commentsForTask ?? ""
+                if let comments = task.commentsForTask {
+                    newTempTask.tempComments = comments
+                }
+                if let infoForTask = task.infoRoutine {
+                    newTempTask.tempInfo = infoForTask as! NSAttributedString
+                }
                 tempTasks.append(newTempTask)
             }
         } else {
@@ -148,7 +163,7 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let routineTask = routineTasksArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "routineTasksCell", for: indexPath) as! RoutineTasksTableViewCell
-        //cell.delegate = self
+        cell.delegate = self
         cell.routineTaskItem = routineTasksArray[indexPath.row]
         cell.configureRoutineTaskCell(routineTask: routineTask)
         return cell
@@ -175,8 +190,8 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     func loadRoutineTasks(with request: NSFetchRequest<RoutineTask> = RoutineTask.fetchRequest(), predicate: NSPredicate? = nil) {
         
         let routinePredicate = NSPredicate(format: "theRoutine.nameOfRoutine MATCHES %@", routine!.nameOfRoutine!)
-        print("this is the name of the routine")
-        print(routine!.nameOfRoutine!)
+        //print("this is the name of the routine")
+        //print(routine!.nameOfRoutine!)
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [routinePredicate, additionalPredicate])
         } else {
@@ -188,8 +203,8 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
         
         do {
             routineTasksArray = try context.fetch(request)
-            print("This is the routine tasks array")
-            print(routineTasksArray)
+            //print("This is the routine tasks array")
+            //print(routineTasksArray)
         } catch {
             print("Error loading context \(error)")
         }
@@ -242,5 +257,20 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     
+    
+}
+
+
+
+extension RoutineTasksViewController: MyRoutineTaskTableViewCellDelegate {
+    func didTapInfo(task: RoutineTask) {
+        let myVC = storyboard?.instantiateViewController(withIdentifier: "detailVC") as! DetailViewController
+        myVC.taskToEdit = task
+        
+        navigationController?.pushViewController(myVC, animated: true)
+    }
+    
+    
+
     
 }

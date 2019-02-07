@@ -500,7 +500,7 @@
             </objects>
             <point key="canvasLocation" x="3480.46875" y="1045.8984375"/>
         </scene>
-        <!--Step by step for set-->
+        <!--Set tasks-->
         <scene sceneID="Vax-h6-m8H">
             <objects>
                 <viewController storyboardIdentifier="routineTasksVC" id="k1c-M9-uh5" customClass="RoutineTasksViewController" customModule="TaskTracker" customModuleProvider="target" sceneMemberID="viewController">
@@ -574,6 +574,9 @@
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
+                                                            <connections>
+                                                                <action selector="commentsTextField:" destination="MzS-aK-Zo5" eventType="editingDidEnd" id="09G-Rr-zQe"/>
+                                                            </connections>
                                                         </textField>
                                                     </subviews>
                                                     <constraints>
@@ -587,6 +590,9 @@
                                                         <constraint firstAttribute="width" constant="22" id="gGf-Xu-fMX"/>
                                                         <constraint firstAttribute="height" constant="22" id="zrj-GU-Dnc"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <action selector="infoButtonPressed:" destination="MzS-aK-Zo5" eventType="touchUpInside" id="R27-Y2-NEN"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -618,7 +624,7 @@
                         <viewLayoutGuide key="safeArea" id="PiL-Fu-g2K"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Step by step for set" id="BUK-Qm-wIh">
+                    <navigationItem key="navigationItem" title="Set tasks" id="BUK-Qm-wIh">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="SeX-6R-uJO">
                                 <connections>
@@ -636,12 +642,128 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="routineTasksTableView" destination="th0-FU-Te9" id="jA3-JD-opN"/>
+                        <segue destination="jRw-1N-1pg" kind="show" identifier="toInfoSegue" id="tsc-Hg-d9n"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofw-g3-8hr" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="CMz-FB-ke0" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4389" y="600"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="6GY-08-2vr">
+            <objects>
+                <viewController storyboardIdentifier="detailVC" id="jRw-1N-1pg" customClass="DetailViewController" customModule="TaskTracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JEI-wn-5gI">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit task" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HZ3-OO-ivK">
+                                <rect key="frame" x="309" y="70" width="150" height="20.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="AKU-8I-FdZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="9rE-xb-SaQ">
+                                <rect key="frame" x="10" y="90" width="150" height="113"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Task Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OWv-c1-ARO">
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="31" id="slH-Db-fQM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Minutes from start" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cfz-Q4-l6S">
+                                        <rect key="frame" x="0.0" y="41" width="150" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="31" id="yQh-cz-1UJ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LBe-e5-qpL">
+                                        <rect key="frame" x="0.0" y="82" width="150" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="31" id="whk-W4-9jr"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="XCc-ur-N7l"/>
+                                </constraints>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="65j-uL-2WX">
+                                <rect key="frame" x="170" y="90" width="498" height="110"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="a4O-1J-MFf">
+                                        <rect key="frame" x="0.0" y="0.0" width="498" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lnw-ZU-cNb">
+                                        <rect key="frame" x="0.0" y="40" width="498" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="intervalChanged:" destination="jRw-1N-1pg" eventType="editingDidEnd" id="N5U-g4-zOO"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f5f-78-NaQ">
+                                        <rect key="frame" x="0.0" y="80" width="498" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="taskCommentsChanged:" destination="jRw-1N-1pg" eventType="editingDidEnd" id="ROJ-g8-arN"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="0wP-ru-ZxS">
+                                <rect key="frame" x="10" y="223" width="748" height="751"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="HZ3-OO-ivK" firstAttribute="top" secondItem="urk-pg-Gya" secondAttribute="top" id="6lj-rp-nFh"/>
+                            <constraint firstItem="65j-uL-2WX" firstAttribute="top" secondItem="urk-pg-Gya" secondAttribute="top" constant="20" id="7Cg-RJ-aiJ"/>
+                            <constraint firstItem="urk-pg-Gya" firstAttribute="trailing" secondItem="65j-uL-2WX" secondAttribute="trailing" constant="100" id="Jot-8c-79H"/>
+                            <constraint firstItem="urk-pg-Gya" firstAttribute="trailing" secondItem="0wP-ru-ZxS" secondAttribute="trailing" constant="10" id="Pkb-K5-gcS"/>
+                            <constraint firstItem="65j-uL-2WX" firstAttribute="leading" secondItem="9rE-xb-SaQ" secondAttribute="trailing" constant="10" id="Rsn-dT-uPv"/>
+                            <constraint firstItem="9rE-xb-SaQ" firstAttribute="leading" secondItem="urk-pg-Gya" secondAttribute="leading" constant="10" id="V6d-DE-efK"/>
+                            <constraint firstItem="0wP-ru-ZxS" firstAttribute="bottom" secondItem="urk-pg-Gya" secondAttribute="bottom" id="a6W-ec-jkR"/>
+                            <constraint firstItem="9rE-xb-SaQ" firstAttribute="top" secondItem="urk-pg-Gya" secondAttribute="top" constant="20" id="dX9-ge-EH5"/>
+                            <constraint firstItem="HZ3-OO-ivK" firstAttribute="centerX" secondItem="JEI-wn-5gI" secondAttribute="centerX" id="iFw-ug-DKe"/>
+                            <constraint firstItem="0wP-ru-ZxS" firstAttribute="top" secondItem="9rE-xb-SaQ" secondAttribute="bottom" constant="20" id="ngE-6c-E9i"/>
+                            <constraint firstItem="0wP-ru-ZxS" firstAttribute="leading" secondItem="urk-pg-Gya" secondAttribute="leading" constant="10" id="vyT-0s-Pt0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="urk-pg-Gya"/>
+                    </view>
+                    <connections>
+                        <outlet property="infoTextView" destination="0wP-ru-ZxS" id="Ajr-hJ-fPg"/>
+                        <outlet property="taskCommentsOutlet" destination="f5f-78-NaQ" id="VUM-Nu-Fm7"/>
+                        <outlet property="taskIntervalOutlet" destination="lnw-ZU-cNb" id="Lu3-v9-hhD"/>
+                        <outlet property="taskNameOutlet" destination="a4O-1J-MFf" id="txP-PJ-wsN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hoO-F2-rU8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5082.8125" y="587.6953125"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fxR-7C-9rC">

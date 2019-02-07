@@ -10,6 +10,7 @@
 		DB70AACB2202420600350949 /* RoutineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB70AACA2202420600350949 /* RoutineTableViewCell.swift */; };
 		DB70AACD2202421600350949 /* RoutineTasksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB70AACC2202421600350949 /* RoutineTasksTableViewCell.swift */; };
 		DB70AACF22024D6200350949 /* TempTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB70AACE22024D6200350949 /* TempTask.swift */; };
+		DB8984AC220B5F8D0070FB05 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8984AB220B5F8D0070FB05 /* DetailViewController.swift */; };
 		DB9C4DF221ECE7AA00E11A15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4DF121ECE7AA00E11A15 /* AppDelegate.swift */; };
 		DB9C4DF421ECE7AA00E11A15 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9C4DF321ECE7AA00E11A15 /* DayViewController.swift */; };
 		DB9C4DF721ECE7AA00E11A15 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB9C4DF521ECE7AA00E11A15 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		DB70AACA2202420600350949 /* RoutineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTableViewCell.swift; sourceTree = "<group>"; };
 		DB70AACC2202421600350949 /* RoutineTasksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTasksTableViewCell.swift; sourceTree = "<group>"; };
 		DB70AACE22024D6200350949 /* TempTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempTask.swift; sourceTree = "<group>"; };
+		DB8984AB220B5F8D0070FB05 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		DB9C4DEE21ECE7AA00E11A15 /* TaskTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9C4DF121ECE7AA00E11A15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB9C4DF321ECE7AA00E11A15 /* DayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				DBCD2D3422020E5D009157BF /* RoutineViewController.swift */,
 				DBCD2D3622020E7B009157BF /* RoutineTasksViewController.swift */,
 				DB9C4E0621ECEDB100E11A15 /* TaskViewController.swift */,
+				DB8984AB220B5F8D0070FB05 /* DetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB8984AC220B5F8D0070FB05 /* DetailViewController.swift in Sources */,
 				DB70AACB2202420600350949 /* RoutineTableViewCell.swift in Sources */,
 				DB70AACF22024D6200350949 /* TempTask.swift in Sources */,
 				DB9C4DF421ECE7AA00E11A15 /* DayViewController.swift in Sources */,

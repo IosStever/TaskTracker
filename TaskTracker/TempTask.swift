@@ -10,8 +10,9 @@ import Foundation
 
 class TempTask {
     var tempName = ""
-    var tempInterval = 0
-    var tempComments = ""
+    var tempInterval: Int?
+    var tempComments: String?
+    var tempInfo: NSAttributedString?
     
 //    init(tempName: String, tempInterval: Int, tempComments: String)
 //    {
