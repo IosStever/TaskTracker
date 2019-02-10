@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 protocol loadRoutineTasksDelegate : class {
-    func loadRoutineTasks(tempArray: [TempTask])
+    func addRoutineTasks(tempArray: [TempTask])
 }
 
 class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
@@ -88,7 +88,7 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
                     newTempTask.tempComments = comments
                 }
                 if let infoForTask = task.infoRoutine {
-                    newTempTask.tempInfo = infoForTask as! NSAttributedString
+                    newTempTask.tempInfo = infoForTask as? NSAttributedString
                 }
                 tempTasks.append(newTempTask)
             }
@@ -112,11 +112,16 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
             newRoutineTask.nameOfTask = textField.text
             if let numberEntered = textField2.text {
                 if let timeInterval = Int16(numberEntered) {
-                    newRoutineTask.interval = timeInterval
-                    
-                } else {
-                    newRoutineTask.interval = 0                }
+                    if timeInterval > 0 {
+                        newRoutineTask.interval = timeInterval
+                    }
+                }
             }
+            else {
+                newRoutineTask.interval = 0
+                
+            }
+            
             
             
             newRoutineTask.commentsForTask = ""
@@ -214,7 +219,7 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     
     @objc func useRoutinePressed(_ sender: Any)  {
         loadTempTasks()
-        delegate?.loadRoutineTasks(tempArray: tempTasks)
+        delegate?.addRoutineTasks(tempArray: tempTasks)
     }
     
     @IBAction func loadButtonPressed(_ sender: Any) {

@@ -31,7 +31,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         didSet {
            print("This is the temptask array")
             print(tempTaskArray!)
-           loadRoutineTasks(tempArray: tempTaskArray!)
+           addRoutineTasks(tempArray: tempTaskArray!)
         }
     }
     
@@ -49,7 +49,6 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
         self.hideKeyboardWhenTappedAround()
-        //navigationItem.title = ""
         
         taskTableView.delegate = self
         taskTableView.dataSource = self
@@ -61,10 +60,10 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBAction func nowButtonPressed(_ sender: UIBarButtonItem) {
         if taskArray.count > 0 {
             self.baseTime = Date()
-            self.startTimeLabel.text = ("Base: \(timeFormat(date: baseTime!))")
+            self.startTimeLabel.text = ("\(timeFormat(date: baseTime!))")
             for task in taskArray {
                 if !task.startToggle {
-                    task.startTime = baseTime?.adding(minutes: Int(task.timeFromStart))
+                    task.goalTime = baseTime?.adding(minutes: Int(task.timeFromStart))
                 }
             }
         }
@@ -86,16 +85,22 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             newTask.taskName = textField.text ?? "No name entered"
             if let numberEntered = textField2.text {
                 if let timeInterval = Int16(numberEntered) {
+                    if timeInterval > 0 {
+                    self.startTime = Date()
+                    newTask.startToggle   = false
+                    print("starttoggle is false")
                     newTask.timeFromStart = timeInterval
-                    newTask.startTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
-
-                } else {
-                    newTask.timeFromStart=0
+                    newTask.goalTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
+                    }
+                }
+                    else {
+                    newTask.startToggle   = true
+                    newTask.timeFromStart = 0
                     newTask.startTime = Date()
+                    newTask.goalTime = Date()
                 }
             }
-            newTask.startToggle   = true
-            newTask.comments = ""
+            //newTask.comments = ""
             newTask.dayForTask = self.dayOfTask
             
             self.taskArray.append(newTask)
@@ -137,14 +142,11 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.saveTasks()
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        loadTasks()
-//    }
 
-    func loadRoutineTasks(tempArray: [TempTask]) {
+    func addRoutineTasks(tempArray: [TempTask]) {
         
         for tempTask in tempArray {
-           //createTimedTask(name: tempTask.tempName, comments: tempTask.tempComments, timeFromStart: tempTask.tempInterval)
+
             baseTime = Date()
             self.startTimeLabel.text = timeFormat(date: baseTime!)
             let newTask = Task(context: self.context)
@@ -156,7 +158,11 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             if let interval = tempTask.tempInterval {
                 newTask.timeFromStart = Int16(interval)
+                newTask.startTime = self.baseTime!.adding(minutes: interval)
+                newTask.goalTime = self.baseTime!.adding(minutes: interval)
+
             }
+
             if let info = tempTask.tempInfo {
                 newTask.info = info
             }
@@ -194,13 +200,21 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     func allTasksTogether() {
     saveTasks()
     loadTasks()
-    var oneTask = ""
-    if taskArray.count > 0 {
+        self.summaryText = ""
+        var oneTask = " "
+    var sTime = ""
+    var gTime = " "
+        if taskArray.count > 0 {
         for task in taskArray {
-            let time = timeFormat(date: task.startTime ?? Date())
+            if let startTime = task.startTime {
+                sTime = timeFormat(date: startTime)
+            }
+            if let goalTime = task.goalTime {
+                gTime = timeFormat(date: goalTime)
+            }
             let theTask = task.taskName ?? " "
             let comment = task.comments ?? " "
-            oneTask = ("\(time) \t \(theTask) \t \(comment) \n")
+            oneTask = ("\(sTime) \t \(gTime) \t \(theTask) \t \(comment) \n")
             self.summaryText = summaryText + oneTask
 
             }
@@ -225,11 +239,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         return 35
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        
-//        return UITableView.automaticDimension
-//        
-//    }
+
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 35
@@ -239,8 +249,9 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         let task = taskArray[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as! TaskTableViewCell
         cell.delegate = self
+        cell.delegateInfo = self
         cell.taskItem = taskArray[indexPath.row]
-        cell.configureCell(task: task)
+        cell.configureTaskCell(task: task)
         return cell
     }
     
@@ -249,6 +260,8 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             context.delete(taskArray[indexPath.row])
             taskArray.remove(at: indexPath.row)
             saveTasks()
+            taskTableView.reloadData()
+
         }
     }
     
@@ -335,10 +348,9 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
 
 extension TaskViewController: MyTableViewCellDelegate {
     func didTapStartAction(task: Task) {
-
+        task.startToggle = true
+        task.info = nil
         task.startTime = Date()
-
-        task.startToggle = !task.startToggle
         saveTasks()
         loadTasks()
     }
@@ -349,4 +361,18 @@ extension Date {
     func adding(minutes: Int) -> Date {
         return Calendar.current.date(byAdding: .minute, value: minutes, to: self)!
     }
+}
+
+
+extension TaskViewController: MyInfoTaskTableViewCellDelegate {
+    func didTapInfo(task: Task) {
+        let myVC = storyboard?.instantiateViewController(withIdentifier: "infoVC") as! InfoViewController
+        myVC.infoTask = task
+        
+        navigationController?.pushViewController(myVC, animated: true)
+    }
+    
+    
+    
+    
 }

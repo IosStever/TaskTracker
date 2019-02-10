@@ -126,7 +126,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     
     func loadDays (with request: NSFetchRequest<Day> = Day.fetchRequest()) {
-        let sort = NSSortDescriptor(key: "dayDate", ascending: false)
+        let sort = NSSortDescriptor(key: "dayDate", ascending: true)
         request.sortDescriptors = [sort]
         do {
             dayArray = try context.fetch(request)

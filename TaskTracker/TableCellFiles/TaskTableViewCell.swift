@@ -14,37 +14,47 @@ protocol MyTableViewCellDelegate : class {
     
 }
 
+protocol MyInfoTaskTableViewCellDelegate : class {
+    func didTapInfo (task: Task)
+    
+}
 
 class TaskTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var startTimeLabel: UILabel!
     
     @IBOutlet weak var taskName: UILabel!
     
     @IBOutlet weak var startOutletSwitch: UISwitch!
-
+    
+    @IBOutlet weak var goalTimeLabel: UILabel!
     
     var taskItem: Task!
     
     weak var delegate: MyTableViewCellDelegate?
+    weak var delegateInfo: MyInfoTaskTableViewCellDelegate?
     
     @IBOutlet weak var infoButton: UIButton!
     
     @IBOutlet weak var commentTextField: UITextField!
     
-    func configureCell(task: Task) {
-        startTimeLabel?.text = timeFormat(date: task.startTime ?? Date())
+    func configureTaskCell(task: Task) {
         if !task.startToggle {
-            startTimeLabel?.textColor = .gray
+            startTimeLabel?.text = ""
+            goalTimeLabel?.textColor = .gray
+            goalTimeLabel?.text = timeFormat(date: task.goalTime ?? Date())
+            
         } else {
             startTimeLabel?.textColor = .black
+            startTimeLabel?.text = timeFormat(date: task.startTime ?? Date())
+           // startOutletSwitch.isEnabled = false
         }
-       
+        
         taskName?.text = ("+\(task.timeFromStart): \((task.taskName) ?? "No name")")
         startOutletSwitch?.setOn(task.startToggle, animated: false)
         commentTextField.text = task.comments ?? ""
     }
-
+    
     func timeFormat(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .short
@@ -55,18 +65,22 @@ class TaskTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
     }
-
+    
     @IBAction func infoButtonPushed(_ sender: UIButton) {
+        delegateInfo?.didTapInfo(task: taskItem)
     }
     
     @IBAction func taskStartSwitch(_ sender: UISwitch) {
         delegate?.didTapStartAction(task: taskItem)
     }
+    
+  
+    
     
     @IBAction func commentInput(_ sender: Any) {
         taskItem.comments = commentTextField.text ?? ""
