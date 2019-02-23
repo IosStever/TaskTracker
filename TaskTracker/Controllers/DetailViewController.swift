@@ -25,6 +25,12 @@ class DetailViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         loadTask()
         infoTextView.allowsEditingTextAttributes=true
+        taskNameOutlet.layer.borderWidth = 1
+        taskNameOutlet.layer.borderColor = UIColor.blue.cgColor
+        taskIntervalOutlet.layer.borderWidth = 1
+        taskIntervalOutlet.layer.borderColor = UIColor.blue.cgColor
+        taskCommentsOutlet.layer.borderWidth = 1
+        taskCommentsOutlet.layer.borderColor = UIColor.blue.cgColor
         infoTextView.layer.borderWidth = 1
         infoTextView.layer.borderColor = UIColor.blue.cgColor
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView(gesture:)))

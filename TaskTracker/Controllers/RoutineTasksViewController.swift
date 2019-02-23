@@ -16,7 +16,9 @@ protocol loadRoutineTasksDelegate : class {
 class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
     //UITextFieldDelegate
     
+    @IBOutlet weak var addToTodayButton: UIBarButtonItem!
     @IBOutlet weak var routineTasksTableView: UITableView!
+    @IBOutlet weak var routineTaskNameLabel: UILabel!
     
     var routineTasksArray = [RoutineTask]()
     
@@ -24,6 +26,7 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
     
     var routine : Routine? {
         didSet {
+            routineName = routine?.nameOfRoutine
 
             loadRoutineTasks()
         }
@@ -42,6 +45,14 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
         routineTasksTableView.delegate = self
         routineTasksTableView.dataSource = self
+        let button = UIButton.init(type: .custom)
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 5
+        button.layer.borderColor = UIColor.darkGray.cgColor
+        
+            
+            self.navigationItem.title = "Tasks for \(routineName ?? "No name entered")"
+
         loadRoutineTasks()
     }
     
@@ -121,8 +132,6 @@ class RoutineTasksViewController: UIViewController, UITableViewDelegate, UITable
                 newRoutineTask.interval = 0
                 
             }
-            
-            
             
             newRoutineTask.commentsForTask = ""
             newRoutineTask.theRoutine = self.routine

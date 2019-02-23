@@ -31,6 +31,8 @@ class DayTableViewCell: UITableViewCell {
         dateOfTasks.text = day.dayDate
         
         nameOfPerson.text = day.name
+        dateOfTasks.font = .preferredFont(forTextStyle: .body)
+        nameOfPerson.font = .preferredFont(forTextStyle: .body)
     }
     
     func timeFormat(date: Date) -> String {

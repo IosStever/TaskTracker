@@ -10,7 +10,8 @@ import UIKit
 import CoreData
 
 class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var routineTableView: UITableView!
     
     var routineArray = [Routine]()
@@ -26,25 +27,25 @@ class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewD
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+
        self.hideKeyboardWhenTappedAround()
         loadRoutines()
-//        routineTableView.rowHeight = UITableView.automaticDimension
-//        routineTableView.estimatedRowHeight = 35
         
     }
+    
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         var textField2 = UITextField()
         
-        let alert = UIAlertController(title: "Type the name of the routine below", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Name the series", message: "Series title", preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             let newRoutine = Routine(context: self.context)
-            newRoutine.nameOfRoutine = textField.text
-            newRoutine.commentsForRoutine = textField2.text ?? ""
+            newRoutine.nameOfRoutine = textField.text ?? " "
+            newRoutine.commentsForRoutine = textField2.text ?? " "
             self.routineArray.append(newRoutine)
             
             self.saveRoutines()
@@ -52,13 +53,13 @@ class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Routine name"
-            textField = alertTextField
+        alert.addTextField { (alertTextField1) in
+            alertTextField1.placeholder = "Name of series"
+            textField = alertTextField1
         }
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Comments"
-            textField2 = alertTextField
+        alert.addTextField { (alertTextField2) in
+            alertTextField2.placeholder = "Comments"
+            textField2 = alertTextField2
         }
         
         alert.addAction(action)
@@ -78,7 +79,6 @@ class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "routineCell", for: indexPath) as! RoutineTableViewCell
         cell.routineItem = routineArray[indexPath.row]
         cell.configureRoutineCell(routine: routine)
-
         
         return cell
     }
@@ -115,6 +115,9 @@ class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func loadRoutines (with request: NSFetchRequest<Routine> = Routine.fetchRequest()) {
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "nameOfRoutine", ascending: true, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))]
+
         do {
             routineArray = try context.fetch(request)
         } catch {
@@ -159,6 +162,35 @@ class RoutineViewController: UIViewController, UITableViewDelegate, UITableViewD
         ]
     }
 
+
     
+    
+}
+
+extension RoutineViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        let request : NSFetchRequest<Routine> = Routine.fetchRequest()
+        request.predicate = NSCompoundPredicate(
+            type: .or,
+            subpredicates: [
+                NSPredicate(format: "commentsForRoutine CONTAINS[cd] %@", searchBar.text!),
+                NSPredicate(format: "nameOfRoutine CONTAINS[cd] %@", searchBar.text!)
+            ]
+        )
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "nameOfRoutine", ascending: true, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))]
+        
+            self.loadRoutines(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadRoutines()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
     
 }

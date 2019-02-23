@@ -39,20 +39,26 @@ class TaskTableViewCell: UITableViewCell {
     @IBOutlet weak var commentTextField: UITextField!
     
     func configureTaskCell(task: Task) {
-        if !task.startToggle {
+        if task.startToggle {
             startTimeLabel?.text = ""
             goalTimeLabel?.textColor = .gray
             goalTimeLabel?.text = timeFormat(date: task.goalTime ?? Date())
+             startOutletSwitch.isEnabled = true
             
         } else {
             startTimeLabel?.textColor = .black
             startTimeLabel?.text = timeFormat(date: task.startTime ?? Date())
-           // startOutletSwitch.isEnabled = false
+            goalTimeLabel?.text = timeFormat(date: task.goalTime ?? Date())
+            startOutletSwitch.isEnabled = false
         }
         
         taskName?.text = ("+\(task.timeFromStart): \((task.taskName) ?? "No name")")
         startOutletSwitch?.setOn(task.startToggle, animated: false)
         commentTextField.text = task.comments ?? ""
+        taskName?.font = .preferredFont(forTextStyle: .body)
+        commentTextField?.font = .preferredFont(forTextStyle: .body)
+        startTimeLabel?.font = .preferredFont(forTextStyle: .body)
+        goalTimeLabel?.font = .preferredFont(forTextStyle: .body)
     }
     
     func timeFormat(date: Date) -> String {

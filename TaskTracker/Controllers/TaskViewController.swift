@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class TaskViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, loadRoutineTasksDelegate {
-
+    
     @IBOutlet weak var taskHeaderLabel: UILabel!
     @IBOutlet weak var commentsHeaderLabel: UILabel!
     @IBOutlet weak var taskTableView: UITableView!
@@ -20,18 +20,17 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     var baseTime: Date?
     var startTime: Date?
     var taskArray = [Task]()
+    
     var dayOfTask : Day? {
         didSet {
-            startTime = dayOfTask?.startOfDay
+            startTime = Date()//dayOfTask?.startOfDay
             loadTasks()
         }
     }
     
     var tempTaskArray : [TempTask]? {
         didSet {
-           print("This is the temptask array")
-            print(tempTaskArray!)
-           addRoutineTasks(tempArray: tempTaskArray!)
+            addRoutineTasks(tempArray: tempTaskArray!)
         }
     }
     
@@ -41,29 +40,32 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let tap = UITapGestureRecognizer(target: self.view, action: Selector(“endEditing:”))
-//        tap.cancelsTouchesInView = false
-//        self.view.addGestureRecognizer(tap)
+
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(self.keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
         self.hideKeyboardWhenTappedAround()
-        
+        if let dayBeingTracked = startTime {
+            self.navigationItem.title = "Tasks for \(dateFormat(date: dayBeingTracked))"
+        } else {
+        self.navigationItem.title = "Tasks for today"
+        }
         taskTableView.delegate = self
         taskTableView.dataSource = self
         startTimeLabel.text = timeFormat(date: startTime!)
-        //taskTableView.rowHeight = UITableView.automaticDimension
-        //taskTableView.estimatedRowHeight = 35
+        taskTableView.rowHeight = UITableView.automaticDimension
+        taskTableView.estimatedRowHeight = 35
     }
-    
-    @IBAction func nowButtonPressed(_ sender: UIBarButtonItem) {
+    //MARK: Update GoalTimes
+    fileprivate func updateGoalTimes() {
+        self.saveTasks()
         if taskArray.count > 0 {
             self.baseTime = Date()
             self.startTimeLabel.text = ("\(timeFormat(date: baseTime!))")
             for task in taskArray {
-                if !task.startToggle {
+                if task.startToggle {
                     task.goalTime = baseTime?.adding(minutes: Int(task.timeFromStart))
+                    task.startTime = baseTime?.adding(minutes: Int(task.timeFromStart))
                 }
             }
         }
@@ -71,10 +73,15 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.loadTasks()
     }
     
+    @IBAction func nowButtonPressed(_ sender: UIBarButtonItem) {
+        updateGoalTimes()
+    }
+    //MARK: Add Button Pressed
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         var textField2 = UITextField()
-        
+        textField2.delegate = self
+        var intervalEntered = Int16(0)
         let alert = UIAlertController(title: "New Task", message: "", preferredStyle: .alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
@@ -83,38 +90,37 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             let newTask = Task(context: self.context)
             newTask.taskName = textField.text ?? "No name entered"
-            if let numberEntered = textField2.text {
-                if let timeInterval = Int16(numberEntered) {
-                    if timeInterval > 0 {
-                    self.startTime = Date()
-                    newTask.startToggle   = false
-                    print("starttoggle is false")
-                    newTask.timeFromStart = timeInterval
-                    newTask.goalTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
-                    }
-                }
-                    else {
-                    newTask.startToggle   = true
-                    newTask.timeFromStart = 0
-                    newTask.startTime = Date()
-                    newTask.goalTime = Date()
-                }
+            let numberEntered = textField2.text ?? "0"
+            if let theInterval = Int16(numberEntered) {
+                intervalEntered = theInterval
             }
-            //newTask.comments = ""
+            
+            self.startTime = Date()
+            newTask.timeFromStart = intervalEntered
+            if intervalEntered > 0 {
+            newTask.startToggle   = true
+            } else {
+                newTask.startToggle = false
+            }
+            newTask.startTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
+            newTask.goalTime = self.startTime!.adding(minutes: Int(newTask.timeFromStart))
+            
+            
             newTask.dayForTask = self.dayOfTask
             
             self.taskArray.append(newTask)
             self.saveTasks()
             self.loadTasks()
+            self.updateGoalTimes()
             
         }
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "New task"
             textField = alertTextField
         }
-        alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "# of minutes"
-            textField2 = alertTextField
+        alert.addTextField { (alertTextField2) in
+            alertTextField2.placeholder = "# of minutes"
+            textField2 = alertTextField2
         }
         alert.addAction(action)
         alert.addAction(cancelAction)
@@ -142,84 +148,66 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.saveTasks()
     }
     
-
+    //MARK: Add Routine Tasks
     func addRoutineTasks(tempArray: [TempTask]) {
-        
+        loadRTasks()
         for tempTask in tempArray {
-
+            
             baseTime = Date()
             self.startTimeLabel.text = timeFormat(date: baseTime!)
             let newTask = Task(context: self.context)
             newTask.taskName = tempTask.tempName
-            newTask.startToggle   = false
+            newTask.startToggle   = true
+            print(self.dayOfTask!)
             newTask.dayForTask = self.dayOfTask
             if let comments = tempTask.tempComments {
-               newTask.comments = comments
+                newTask.comments = comments
             }
             if let interval = tempTask.tempInterval {
                 newTask.timeFromStart = Int16(interval)
                 newTask.startTime = self.baseTime!.adding(minutes: interval)
                 newTask.goalTime = self.baseTime!.adding(minutes: interval)
-
+                
             }
-
+            
             if let info = tempTask.tempInfo {
                 newTask.info = info
             }
             self.taskArray.append(newTask)
-
+            
         }
-
+        
         self.saveTasks()
-        self.loadRoutineTasks()
+        self.loadTasks()
+        self.updateGoalTimes()
     }
     
-    func createTimedTask(name: String, comments: String, timeFromStart: Int) {
-        baseTime = Date()
-        self.startTimeLabel.text = timeFormat(date: baseTime!)
-        let newTask = Task(context: self.context)
-        newTask.taskName = name
-        newTask.startToggle   = false
-        newTask.comments = comments
-        newTask.dayForTask = self.dayOfTask
-        newTask.startTime = self.baseTime!.adding(minutes: timeFromStart)
-        self.taskArray.append(newTask)
-    }
     
-    func createNowTask(name: String, comments: String) {
-        let newTask = Task(context: self.context)
-        newTask.taskName = name
-        newTask.startToggle   = true
-        newTask.comments = comments
-        newTask.dayForTask = self.dayOfTask
-        let startTime = Date()
-        newTask.startTime = startTime
-        self.taskArray.append(newTask)
-    }
+    
     
     func allTasksTogether() {
-    saveTasks()
-    loadTasks()
+        saveTasks()
+        loadTasks()
         self.summaryText = ""
         var oneTask = " "
-    var sTime = ""
-    var gTime = " "
+        var sTime = ""
+        var gTime = " "
         if taskArray.count > 0 {
-        for task in taskArray {
-            if let startTime = task.startTime {
-                sTime = timeFormat(date: startTime)
+            for task in taskArray {
+                if let startTime = task.startTime {
+                    sTime = timeFormat(date: startTime)
+                }
+                if let goalTime = task.goalTime {
+                    gTime = timeFormat(date: goalTime)
+                }
+                let theTask = task.taskName ?? " "
+                let comment = task.comments ?? " "
+                oneTask = ("\(sTime) \t \(gTime) \t \(theTask) \t \(comment) \n")
+                self.summaryText = summaryText + oneTask
+                
             }
-            if let goalTime = task.goalTime {
-                gTime = timeFormat(date: goalTime)
-            }
-            let theTask = task.taskName ?? " "
-            let comment = task.comments ?? " "
-            oneTask = ("\(sTime) \t \(gTime) \t \(theTask) \t \(comment) \n")
-            self.summaryText = summaryText + oneTask
-
-            }
+        }
     }
-}
     
     func timeFormat(date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -228,22 +216,22 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         return dateFormatter.string(from: date)
     }
     
+    func dateFormat(date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        return dateFormatter.string(from: date)
+    }
+    
+    @IBAction func infoHelpButtonPressed(_ sender: UIButton) {
+    }
     //MARK: Tableview functions
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return taskArray.count
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 35
-    }
     
-
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 35
-    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let task = taskArray[indexPath.row]
@@ -261,35 +249,53 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             taskArray.remove(at: indexPath.row)
             saveTasks()
             taskTableView.reloadData()
-
+            
         }
     }
     
     //MARK: Save and load functions
     
     func saveTasks() {
-            do {
-                try self.context.save()
-            } catch {
-                print("Error saving context \(error)")
-            }
+        do {
+            try self.context.save()
+        } catch {
+            print("Error saving context \(error)")
+        }
         
-        //taskTableView.reloadData()
     }
     
-    func loadRoutineTasks (with request: NSFetchRequest<Task> = Task.fetchRequest()) {
-        let sort = NSSortDescriptor(key: "startTime", ascending: true)
-        request.sortDescriptors = [sort]
+    //    func loadRoutineTasks (with request: NSFetchRequest<Task> = Task.fetchRequest()) {
+    //        let sort = NSSortDescriptor(key: "startTime", ascending: true)
+    //        request.sortDescriptors = [sort]
+    //        do {
+    //            taskArray = try context.fetch(request)
+    //        } catch {
+    //            print("Error loading categories \(error)")
+    //        }
+    //
+    //        taskTableView.reloadData()
+    //
+    //    }
+    
+    func loadRTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
+        
+        let dayPredicate = NSPredicate(format: "dayForTask.dayDate MATCHES %@", dayOfTask!.dayDate!)
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [dayPredicate, additionalPredicate])
+        } else {
+            request.predicate = dayPredicate
+            
+        }
+        //        let sort = NSSortDescriptor(key: "startTime", ascending: true)
+        //        request.sortDescriptors = [sort]
+        
         do {
             taskArray = try context.fetch(request)
         } catch {
-            print("Error loading categories \(error)")
+            print("Error loading context \(error)")
         }
-        
-        taskTableView.reloadData()
-        
+        //taskTableView?.reloadData()
     }
-
     
     func loadTasks(with request: NSFetchRequest<Task> = Task.fetchRequest(), predicate: NSPredicate? = nil) {
         
@@ -302,7 +308,7 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         let sort = NSSortDescriptor(key: "startTime", ascending: true)
         request.sortDescriptors = [sort]
-
+        
         do {
             taskArray = try context.fetch(request)
         } catch {
@@ -312,12 +318,12 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func unwindToTaskVC(_ sender: UIStoryboardSegue) {
-        
+        print("unwound")
     }
     
     //MARK: Keyboard functions
     
-
+    
     @objc func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo,
             let frame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
@@ -326,12 +332,12 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
         taskTableView.contentInset = contentInset
     }
-
+    
     @objc func keyboardWillHide(notification:NSNotification){
-
+        
         let contentInset:UIEdgeInsets = UIEdgeInsets.zero
         self.taskTableView.contentInset = contentInset
-
+        
     }
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -342,13 +348,13 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         ]
     }
-
-
+    
+    
 }
 
 extension TaskViewController: MyTableViewCellDelegate {
     func didTapStartAction(task: Task) {
-        task.startToggle = true
+        task.startToggle = false
         task.info = nil
         task.startTime = Date()
         saveTasks()
@@ -372,7 +378,19 @@ extension TaskViewController: MyInfoTaskTableViewCellDelegate {
         navigationController?.pushViewController(myVC, animated: true)
     }
     
-    
-    
-    
+}
+
+extension TaskViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        return allowedCharacters.isSuperset(of: characterSet)
+        
+        //        guard NSCharacterSet(charactersIn: "0123456789").isSuperset(of: CharacterSet(charactersIn: string)) else {
+        //            return false
+        //        }
+        //        return true
+    }
 }

@@ -5,6 +5,13 @@
 //  Created by Steven Robertson on 1/14/19.
 //  Copyright © 2019 Steven Robertson. All rights reserved.
 //
+/*
+ Set labels to 0 to top and bottom, 0 lines
+ Set preferred font: ex. dateOfTasks.font = .preferredFont(forTextStyle: .body)
+ Set automatic and estimated row height
+ Make sure all height settings in storyboard are deleted as well as heightforrowat
+ 
+ */
 
 import UIKit
 import CoreData
@@ -22,13 +29,12 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = "Your name"
+        
         dayTableView.delegate = self
         dayTableView.dataSource = self
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-        //command shift . shows hidden folders
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        dayTableView.rowHeight = UITableView.automaticDimension
+        dayTableView.estimatedRowHeight = 35.0
         loadDays()
-        
         
     }
     
@@ -92,8 +98,7 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         } catch {
             print("Error saving context \(error)")
         }
-        print("This is the day array")
-        print(dayArray)
+
         dayTableView.reloadData()
     }
     
@@ -119,15 +124,9 @@ class DayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
-    }
-    
-    
     
     func loadDays (with request: NSFetchRequest<Day> = Day.fetchRequest()) {
-        let sort = NSSortDescriptor(key: "dayDate", ascending: true)
-        request.sortDescriptors = [sort]
+        request.sortDescriptors = [NSSortDescriptor(key: "dayDate", ascending: true)]
         do {
             dayArray = try context.fetch(request)
         } catch {
