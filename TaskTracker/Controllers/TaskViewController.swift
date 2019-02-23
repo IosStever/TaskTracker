@@ -73,6 +73,36 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.loadTasks()
     }
     
+    @IBAction func helpButtonPressed(_ sender: UIBarButtonItem) {
+        self.saveTasks()
+        let myVC = storyboard?.instantiateViewController(withIdentifier: "popOverVC") as! PopOverViewController
+        var mutableAttributedString = NSMutableAttributedString()
+        
+        let style = NSMutableParagraphStyle()
+        
+        style.alignment = NSTextAlignment.center
+        
+        
+        let boldAttribute = [NSAttributedString.Key.font: UIFont(name: "Georgia-Bold", size: 13)!, NSAttributedString.Key.paragraphStyle: style]
+        
+        let regularAttribute = [
+            NSAttributedString.Key.font: UIFont(name: "Georgia", size: 13)!
+            
+        ]
+        let myString = "Adding tasks to track\n\n"
+        let boldAttributedString = NSAttributedString(string: myString, attributes:  boldAttribute)
+        let regularAttributedString = NSAttributedString(string: "Tap the \"\" button to add a new task. (Shortcut for external keyboard: Ctrl - n). day to track tasks. Then tap the row you just created to start tracking tasks for today.", attributes: regularAttribute)
+        mutableAttributedString = boldAttributedString + regularAttributedString as! NSMutableAttributedString
+        myVC.preferredContentSize = CGSize(width: 375, height: 200)
+        myVC.popOverText = mutableAttributedString
+        
+        
+        
+        navigationController?.pushViewController(myVC, animated: true)
+    }
+    
+    
+    
     @IBAction func nowButtonPressed(_ sender: UIBarButtonItem) {
         updateGoalTimes()
     }
@@ -142,6 +172,49 @@ class TaskViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         navigationController?.pushViewController(myVC, animated: true)
     }
+    
+    /*
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     switch segue.identifier! {
+     case "segueToTasks":
+     
+     let destinationVC = segue.destination as! TaskViewController
+     
+     if let indexPath = dayTableView.indexPathForSelectedRow {
+     destinationVC.dayOfTask = dayArray[indexPath.row]
+     } else {
+     print("Segue for DayVC did not work")
+     }
+     case "toPopOverVC":
+     let destinationVC = segue.destination as! PopOverViewController
+     var mutableAttributedString = NSMutableAttributedString()
+     
+     let style = NSMutableParagraphStyle()
+     
+     style.alignment = NSTextAlignment.center
+     
+     
+     let boldAttribute = [NSAttributedString.Key.font: UIFont(name: "Georgia-Bold", size: 13)!, NSAttributedString.Key.paragraphStyle: style]
+     
+     let regularAttribute = [
+     NSAttributedString.Key.font: UIFont(name: "Georgia", size: 13)!
+     
+     ]
+     let myString = "Adding day to track\n\n"
+     let boldAttributedString = NSAttributedString(string: myString, attributes:  boldAttribute)
+     let regularAttributedString = NSAttributedString(string: "Tap the \"+\" button to add a new day to track tasks. Then tap the row you just created to start tracking tasks for today.", attributes: regularAttribute)
+     mutableAttributedString = boldAttributedString + regularAttributedString as! NSMutableAttributedString
+     destinationVC.preferredContentSize = CGSize(width: 375, height: 75)
+     destinationVC.popOverText = mutableAttributedString
+     
+     default:
+     break
+     }
+     }
+ 
+ 
+ 
+ */
     
     override func viewWillDisappear(_ animated : Bool) {
         super.viewWillDisappear(animated)

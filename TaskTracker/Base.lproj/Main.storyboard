@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tracking Days-->
+        <!--Name and Date Page-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="DayViewController" customModule="TaskTracker" customModuleProvider="target" sceneMemberID="viewController">
@@ -103,13 +103,23 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Tracking Days" id="I9L-7c-MwL">
+                    <navigationItem key="navigationItem" title="Name and Date Page" id="I9L-7c-MwL">
                         <barButtonItem key="backBarButtonItem" title="Day" id="LfL-fN-pcN"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="F5C-Fa-Tor">
-                            <connections>
-                                <action selector="addButtonPressed:" destination="BYZ-38-t0r" id="VfS-hM-RJw"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="❓" id="W9r-PX-i0J">
+                                <connections>
+                                    <action selector="questionBtnPressed:" destination="BYZ-38-t0r" id="Qtf-we-xqG"/>
+                                    <segue destination="IoA-Ux-6ag" kind="popoverPresentation" identifier="toPopOverVC" popoverAnchorBarButtonItem="W9r-PX-i0J" id="ENp-5U-Qep">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="add" id="F5C-Fa-Tor">
+                                <connections>
+                                    <action selector="addButtonPressed:" destination="BYZ-38-t0r" id="VfS-hM-RJw"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="dayTableView" destination="2cE-aI-2eM" id="pRc-se-FGW"/>
@@ -120,6 +130,39 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="803" y="120"/>
+        </scene>
+        <!--Pop Over View Controller-->
+        <scene sceneID="htf-Qg-ImD">
+            <objects>
+                <viewController storyboardIdentifier="popOverVC" autoresizesArchivedViewToFullSize="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" id="IoA-Ux-6ag" customClass="PopOverViewController" customModule="TaskTracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qpl-y8-SZb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5h3-R9-16B">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="gKd-af-etG" firstAttribute="trailing" secondItem="5h3-R9-16B" secondAttribute="trailing" id="D0y-Jj-7H9"/>
+                            <constraint firstItem="5h3-R9-16B" firstAttribute="leading" secondItem="gKd-af-etG" secondAttribute="leading" id="JES-40-Kcb"/>
+                            <constraint firstItem="5h3-R9-16B" firstAttribute="top" secondItem="gKd-af-etG" secondAttribute="top" id="UlJ-Zt-n5h"/>
+                            <constraint firstAttribute="bottom" secondItem="5h3-R9-16B" secondAttribute="bottom" id="UtV-DZ-YNk"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gKd-af-etG"/>
+                    </view>
+                    <connections>
+                        <outlet property="popOverTextView" destination="5h3-R9-16B" id="Ike-At-tPE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4jl-91-2EZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1380" y="675"/>
         </scene>
         <!--Today's Tasks-->
         <scene sceneID="g91-Ly-USl">
@@ -336,24 +379,32 @@
                     <navigationItem key="navigationItem" title="Today's Tasks" id="zkO-r0-alY">
                         <barButtonItem key="backBarButtonItem" title="Tasks" id="SZH-7q-5Pq"/>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="6dC-5I-gpA">
+                            <barButtonItem title=" ❓" id="QnQ-6o-IyQ">
                                 <connections>
-                                    <action selector="addButtonPressed:" destination="Cha-p6-f7w" id="DnC-gu-aTX"/>
+                                    <action selector="helpButtonPressed:" destination="Cha-p6-f7w" id="4n8-mi-8Le"/>
+                                    <segue destination="IoA-Ux-6ag" kind="popoverPresentation" identifier="tasksToPopOverSegue" popoverAnchorBarButtonItem="QnQ-6o-IyQ" id="lAX-f6-WcA">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Reset" id="9I0-ic-F7w">
+                            <barButtonItem systemItem="compose" id="H4z-Ha-tZj">
+                                <connections>
+                                    <action selector="summaryButtonPressed:" destination="Cha-p6-f7w" id="fCD-Sj-Cw6"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="🕛 " id="9I0-ic-F7w">
                                 <connections>
                                     <action selector="nowButtonPressed:" destination="Cha-p6-f7w" id="fSc-Zp-SpY"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Series" id="S6Q-Hv-TE1">
+                            <barButtonItem title="   📘   " id="S6Q-Hv-TE1">
                                 <connections>
                                     <action selector="listsButtonPressed:" destination="Cha-p6-f7w" id="haV-2M-Ohi"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Summary" id="H4z-Ha-tZj">
+                            <barButtonItem systemItem="add" id="6dC-5I-gpA">
                                 <connections>
-                                    <action selector="summaryButtonPressed:" destination="Cha-p6-f7w" id="fCD-Sj-Cw6"/>
+                                    <action selector="addButtonPressed:" destination="Cha-p6-f7w" id="DnC-gu-aTX"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -1004,4 +1055,7 @@
             <point key="canvasLocation" x="2258" y="82"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="lAX-f6-WcA"/>
+    </inferredMetricsTieBreakers>
 </document>
